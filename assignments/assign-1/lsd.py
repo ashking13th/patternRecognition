@@ -30,6 +30,19 @@ def plot(covMat, classname):
 	# 	for j in range(numFeature):
 	# 		pointClass[i,:,j] = data[i,:,j]
 
+	tellClassNum = np.zeros((np.size(x,0)*np.size(y,0), nClass))
+
+	count = 0
+	for i in x:
+		for j in y:
+			for k in range(nClass):
+				dataPt = np.array([i,j])
+				tellClassNum[count, k] = discriminant(dataPt, meanVector[k], covMat[k])
+			count += 1
+
+
+
+	count = 0
 	for lc in range(1,5):
 		fig = plt.figure()
 		ax = fig.gca()
@@ -44,9 +57,21 @@ def plot(covMat, classname):
 		classes = []
 
 		for i in x:
-			for j in y:
-				dataPt = np.array([i,j])
-				classNum = tellClass(dataPt, covMat, False if lc==1 else True, False if lc==2 else True, False if lc==3 else True)
+			for j in y:	
+
+				# classNum = np.amin(dataPt, covMat, False if lc==1 else True, False if lc==2 else True, False if lc==3 else True)
+				tempArr = np.argsort(tellClassNum[count, :])
+
+				if lc == 1:
+					classNum = tempArr[-2] if tempArr[-1] == 0 else tempArr[-1]
+				elif lc == 2:
+					classNum = tempArr[-2] if tempArr[-1] == 1 else tempArr[-1]
+				elif lc == 3:
+					classNum = tempArr[-2] if tempArr[-1] == 2 else tempArr[-1]
+				else:
+					classNum = tempArr[-1]
+
+				count += 1
 				if classNum == 0:
 					greenX.append(i)
 					greenY.append(j)
@@ -116,8 +141,6 @@ def plot(covMat, classname):
 
 
 #defining discriminant function
-
-
 def discriminant(dataPt, mean, covariance):
 	covInv = np.linalg.inv(covariance)
 	dataTranp = np.transpose(dataPt)
@@ -295,7 +318,7 @@ for i in range(nClass):
 		discValue = np.zeros(nClass)
 		for k in range(nClass):
 			discValue[k] = discriminant(testData[i][j],meanVector[k],covMatrixCfier1[k])
-			predictClassClf1[i][np.argsort(discValue)[-nClass]] += 1
+			predictClassClf1[i][np.argsort(discValue)[-1]] += 1
 
 #end -- classifier - 1
 
@@ -307,7 +330,7 @@ for i in range(nClass):
 		discValue = np.zeros(nClass)
 		for k in range(nClass):
 			discValue[k] = discriminant(testData[i][j],meanVector[k],covMatrixCfier2[k])
-			predictClassClf2[i][np.argsort(discValue)[-nClass]] += 1
+			predictClassClf2[i][np.argsort(discValue)[-1]] += 1
 
 #end -- classifier - - 2
 
@@ -319,7 +342,7 @@ for i in range(nClass):
 		discValue = np.zeros(nClass)
 		for k in range(nClass):
 			discValue[k] = discriminant(testData[i][j],meanVector[k],covMatrixCfier3[k])
-			predictClassClf3[i][np.argsort(discValue)[-nClass]] += 1
+			predictClassClf3[i][np.argsort(discValue)[-1]] += 1
 #end Classifier-3
 
 #classifier - 4
@@ -330,7 +353,7 @@ for i in range(nClass):
 		discValue = np.zeros(nClass)
 		for k in range(nClass):
 			discValue[k] = discriminant(testData[i][j],meanVector[k],covMatrix[k])
-			predictClassClf4[i][np.argsort(discValue)[-nClass]] += 1
+			predictClassClf4[i][np.argsort(discValue)[-1]] += 1
 
 #end -- Classifier - 4
 plot(covMatrixCfier1, "class1_")
