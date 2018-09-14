@@ -1,9 +1,10 @@
 #use of re module for getting dimension of feature vector
 import re, numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import math
 
-def plot(covMat):
+def plot(covMat, classname):
 	minMax = np.zeros((numFeature,numFeature))
 	res = 200
 	precision = 0.5
@@ -39,7 +40,8 @@ def plot(covMat):
 		blueX = []
 		blueY = []
 		# pointGX = pointGY = pointYX = pointYY = pointBX = pointBY = ([] for i in range(6))
-		
+		class_colours = []
+		classes = []
 
 		for i in x:
 			for j in y:
@@ -54,30 +56,44 @@ def plot(covMat):
 				if classNum == 2:
 					blueX.append(i)
 					blueY.append(j)
+		plotname = "plot.png"
 
 		if lc==1:
 			ax.scatter(data[1,:,0],data[1,:,1], c = "r", s=dataPointSize, label="Class 2 Data")
-			ax.scatter(data[2,:,0],data[2,:,1], c = "r", s=dataPointSize, label="Class 3 Data")
+			ax.scatter(data[2,:,0],data[2,:,1], c = "#bf8040", s=dataPointSize, label="Class 3 Data")
 			ax.scatter(yellowX, yellowY, marker='o', c = "y", s=bkgPointSize, label="Class 2 Prediction")
 			ax.scatter(blueX, blueY, marker='o', c = "b", s=bkgPointSize, label="Class 3 Prediction")
-		elif lc==2:
-			ax.scatter(data[0,:,0],data[0,:,1], c = "r", s=dataPointSize, label="Class 1 Data")
-			ax.scatter(data[2,:,0],data[2,:,1], c = "r", s=dataPointSize, label="Class 3 Data")
-			ax.scatter(greenX, greenY, marker='o', c = "g", s=bkgPointSize, label="Class 1 Prediction")
-			ax.scatter(blueX, blueY, marker='o', c = "b", s=bkgPointSize, label="Class 3 Prediction")
-		elif lc==3:
-			ax.scatter(data[0,:,0],data[0,:,1], c = "r", s=dataPointSize, label="Class 1 Data")
-			ax.scatter(data[1,:,0],data[1,:,1], c = "r", s=dataPointSize, label="Class 2 Data")
-			ax.scatter(greenX, greenY, marker='o', c = "g", s=bkgPointSize, label="Class 1 Prediction")
-			ax.scatter(yellowX, yellowY, marker='o', c = "y", s=bkgPointSize, label="Class 2 Prediction")
-		else:
-			ax.scatter(data[0,:,0],data[0,:,1], c = "r", s=dataPointSize, label="Class 1 Data")
-			ax.scatter(data[1,:,0],data[1,:,1], c = "r", s=dataPointSize, label="Class 2 Data")
-			ax.scatter(data[2,:,0],data[2,:,1], c = "r", s=dataPointSize, label="Class 3 Data")
-			ax.scatter(greenX, greenY, marker='o', c = "g", s=bkgPointSize, label="Class 1 Prediction")
-			ax.scatter(yellowX, yellowY, marker='o', c = "y", s=bkgPointSize, label="Class 2 Prediction")
-			ax.scatter(blueX, blueY, marker='o', c = "b", s=bkgPointSize, label="Class 3 Prediction")
+			class_colours = ['r', '#bf8040', 'y', 'b']
+			classes = ["Class 2 Data", "Class 3 Data", "Class 2 Prediction", "Class 3 Prediction"]
+			plotname = "23"+plotname
 
+		elif lc==2:
+			ax.scatter(data[0, :, 0], data[0, :, 1], c="#ff0066", s=dataPointSize, label="Class 1 Data")
+			ax.scatter(data[2,:,0],data[2,:,1], c = "#bf8040", s=dataPointSize, label="Class 3 Data")
+			ax.scatter(greenX, greenY, marker='o', c = "g", s=bkgPointSize, label="Class 1 Prediction")
+			ax.scatter(blueX, blueY, marker='o', c = "b", s=bkgPointSize, label="Class 3 Prediction")
+			class_colours = ['#ff0066', '#bf8040', 'g', 'b']
+			classes = ["Class 1 Data", "Class 3 Data", "Class 1 Prediction", "Class 3 Prediction"]
+			plotname = "13" + plotname
+		elif lc==3:
+			ax.scatter(data[0,:,0],data[0,:,1], c = "#ff0066", s=dataPointSize, label="Class 1 Data")
+			ax.scatter(data[1,:,0],data[1,:,1], c = "r", s=dataPointSize, label="Class 2 Data")
+			ax.scatter(greenX, greenY, marker='o', c = "g", s=bkgPointSize, label="Class 1 Prediction")
+			ax.scatter(yellowX, yellowY, marker='o', c = "y", s=bkgPointSize, label="Class 2 Prediction")
+			class_colours = ['#ff0066', 'r', 'g', 'y']
+			classes = ["Class 1 Data", "Class 2 Data", "Class 1 Prediction", "Class 2 Prediction"]
+			plotname = "12" + plotname
+		else:
+			ax.scatter(data[0,:,0],data[0,:,1], c = "#ff0066", s=dataPointSize, label="Class 1 Data")
+			ax.scatter(data[1,:,0],data[1,:,1], c = "r", s=dataPointSize, label="Class 2 Data")
+			ax.scatter(data[2,:,0],data[2,:,1], c = "#bf8040", s=dataPointSize, label="Class 3 Data")
+			ax.scatter(greenX, greenY, marker='o', c = "g", s=bkgPointSize, label="Class 1 Prediction")
+			ax.scatter(yellowX, yellowY, marker='o', c = "y", s=bkgPointSize, label="Class 2 Prediction")
+			ax.scatter(blueX, blueY, marker='o', c = "b", s=bkgPointSize, label="Class 3 Prediction")
+			class_colours = ['#ff0066', 'r', '#bf8040', 'g', 'y', 'b']
+			classes = ["Class 1 Data", "Class 2 Data", "Class 3 Data", "Class 1 Prediction", "Class 2 Prediction", "Class 3 Prediction"]
+			plotname = "123" + plotname
+		ax.patch.set_visible(False)
 		if lc == 1:
 			plt.title("Class 2 vs Class 3")
 		elif lc == 2:
@@ -87,11 +103,16 @@ def plot(covMat):
 		else:
 			plt.title("Class 1 - Class 2 - Class 3")
 
+		plotname = classname + plotname
 		plt.xlabel('X')
 		plt.ylabel('Y')
 
-		plt.legend(loc='upper right')
-		plt.show()
+		recs = []
+		for i in range(0,len(class_colours)):
+			recs.append(mpatches.Rectangle((0,0),1,1,fc=class_colours[i]))
+
+		plt.legend(recs, classes, loc='upper right')
+		plt.savefig(plotname)
 
 
 #defining discriminant function
@@ -312,7 +333,7 @@ for i in range(nClass):
 			predictClassClf4[i][np.argsort(discValue)[-nClass]] += 1
 
 #end -- Classifier - 4
-#plot(covMatrixCfier1)
-#plot(covMatrixCfier2)
-#plot(covMatrixCfier3)
-plot(covMatrix)
+plot(covMatrixCfier1, "class1_")
+plot(covMatrixCfier2, "class2_")
+plot(covMatrixCfier3, "class3_")
+plot(covMatrix, "class4_")
