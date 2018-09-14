@@ -6,8 +6,8 @@ import math
 def plot(covMat):
 	minMax = np.zeros((numFeature,numFeature))
 	res = 200
-	precision = 0.1
-	bkgPointSize = 0.01
+	precision = 0.5
+	bkgPointSize = 0.05
 	dataPointSize = 0.5
 	for i in range(numFeature):
 		minMax[i, 0] = np.ceil(1.5*np.amin(data[:, :, 0]))
@@ -30,6 +30,8 @@ def plot(covMat):
 	# 		pointClass[i,:,j] = data[i,:,j]
 
 	for lc in range(1,5):
+		fig = plt.figure()
+		ax = fig.gca()
 		greenX = []
 		greenY = []
 		yellowX = []
@@ -53,25 +55,42 @@ def plot(covMat):
 					blueX.append(i)
 					blueY.append(j)
 
-		plt.scatter(greenX, greenY, marker='o', c = "g", s=bkgPointSize)
-		plt.scatter(yellowX, yellowY, marker='o', c = "y", s=bkgPointSize)
-		plt.scatter(blueX, blueY, marker='o', c = "b", s=bkgPointSize)
-
 		if lc==1:
-			plt.scatter(data[1,:,0],data[1,:,1], c = "r", s=dataPointSize)
-			plt.scatter(data[2,:,0],data[2,:,1], c = "r", s=dataPointSize) 
+			ax.scatter(data[1,:,0],data[1,:,1], c = "r", s=dataPointSize, label="Class 2 Data")
+			ax.scatter(data[2,:,0],data[2,:,1], c = "r", s=dataPointSize, label="Class 3 Data")
+			ax.scatter(yellowX, yellowY, marker='o', c = "y", s=bkgPointSize, label="Class 2 Prediction")
+			ax.scatter(blueX, blueY, marker='o', c = "b", s=bkgPointSize, label="Class 3 Prediction")
 		elif lc==2:
-			plt.scatter(data[0,:,0],data[0,:,1], c = "r", s=dataPointSize)
-			plt.scatter(data[2,:,0],data[2,:,1], c = "r", s=dataPointSize) 
+			ax.scatter(data[0,:,0],data[0,:,1], c = "r", s=dataPointSize, label="Class 1 Data")
+			ax.scatter(data[2,:,0],data[2,:,1], c = "r", s=dataPointSize, label="Class 3 Data")
+			ax.scatter(greenX, greenY, marker='o', c = "g", s=bkgPointSize, label="Class 1 Prediction")
+			ax.scatter(blueX, blueY, marker='o', c = "b", s=bkgPointSize, label="Class 3 Prediction")
 		elif lc==3:
-			plt.scatter(data[0,:,0],data[0,:,1], c = "r", s=dataPointSize)
-			plt.scatter(data[1,:,0],data[1,:,1], c = "r", s=dataPointSize)
+			ax.scatter(data[0,:,0],data[0,:,1], c = "r", s=dataPointSize, label="Class 1 Data")
+			ax.scatter(data[1,:,0],data[1,:,1], c = "r", s=dataPointSize, label="Class 2 Data")
+			ax.scatter(greenX, greenY, marker='o', c = "g", s=bkgPointSize, label="Class 1 Prediction")
+			ax.scatter(yellowX, yellowY, marker='o', c = "y", s=bkgPointSize, label="Class 2 Prediction")
 		else:
-			plt.scatter(data[0,:,0],data[0,:,1], c = "r", s=dataPointSize)
-			plt.scatter(data[1,:,0],data[1,:,1], c = "r", s=dataPointSize)
-			plt.scatter(data[2,:,0],data[2,:,1], c = "r", s=dataPointSize) 
+			ax.scatter(data[0,:,0],data[0,:,1], c = "r", s=dataPointSize, label="Class 1 Data")
+			ax.scatter(data[1,:,0],data[1,:,1], c = "r", s=dataPointSize, label="Class 2 Data")
+			ax.scatter(data[2,:,0],data[2,:,1], c = "r", s=dataPointSize, label="Class 3 Data")
+			ax.scatter(greenX, greenY, marker='o', c = "g", s=bkgPointSize, label="Class 1 Prediction")
+			ax.scatter(yellowX, yellowY, marker='o', c = "y", s=bkgPointSize, label="Class 2 Prediction")
+			ax.scatter(blueX, blueY, marker='o', c = "b", s=bkgPointSize, label="Class 3 Prediction")
 
+		if lc == 1:
+			plt.title("Class 2 vs Class 3")
+		elif lc == 2:
+			plt.title("Class 1 vs Class 3")
+		elif lc == 3:
+			plt.title("Class 1 vs Class 2")
+		else:
+			plt.title("Class 1 - Class 2 - Class 3")
 
+		plt.xlabel('X')
+		plt.ylabel('Y')
+
+		plt.legend(loc='upper right')
 		plt.show()
 
 
