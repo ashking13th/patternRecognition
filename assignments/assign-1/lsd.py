@@ -55,7 +55,7 @@ def plot(covMat, classname):
 		# pointGX = pointGY = pointYX = pointYY = pointBX = pointBY = ([] for i in range(6))
 		class_colours = []
 		classes = []
-
+		count = 0
 		for i in x:
 			for j in y:	
 
