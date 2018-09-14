@@ -44,15 +44,10 @@ def plot(covMat, classname):
 
 
 	count = 0
-	for lc in range(1,5):
+	for idx in range(nClass+1):
 		fig = plt.figure()
 		ax = fig.gca()
-		greenX = []
-		greenY = []
-		yellowX = []
-		yellowY = []
-		blueX = []
-		blueY = []
+		greenX, greenY, yellowX, yellowY, blueX, blueY = ([] for i in range(6))
 		# pointGX = pointGY = pointYX = pointYY = pointBX = pointBY = ([] for i in range(6))
 		class_colours = []
 		classes = []
@@ -62,17 +57,18 @@ def plot(covMat, classname):
 
 				# classNum = np.amin(dataPt, covMat, False if lc==1 else True, False if lc==2 else True, False if lc==3 else True)
 				tempArr = np.argsort(tellClassNum[count, :])
-
-				if lc == 1:
-					classNum = tempArr[-2] if tempArr[-1] == 0 else tempArr[-1]
-				elif lc == 2:
-					classNum = tempArr[-2] if tempArr[-1] == 1 else tempArr[-1]
-				elif lc == 3:
-					classNum = tempArr[-2] if tempArr[-1] == 2 else tempArr[-1]
-				else:
-					classNum = tempArr[-1]
-
 				count += 1
+
+				classNum = tempArr[-2] if tempArr[-1] == idx else tempArr[-1]
+				# if lc == 1:
+				# 	classNum = tempArr[-2] if tempArr[-1] == 0 else tempArr[-1]
+				# elif lc == 2:
+				# 	classNum = tempArr[-2] if tempArr[-1] == 1 else tempArr[-1]
+				# elif lc == 3:
+				# 	classNum = tempArr[-2] if tempArr[-1] == 2 else tempArr[-1]
+				# else:
+				# 	classNum = tempArr[-1]
+
 				if classNum == 0:
 					greenX.append(i)
 					greenY.append(j)
@@ -84,28 +80,28 @@ def plot(covMat, classname):
 					blueY.append(j)
 		plotname = "plot.png"
 
-		if lc==1:
+		if idx==0:
 			ax.plot(yellowX, yellowY, c=colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
 			ax.plot(blueX, blueY, c=colors[2],marker=".",  linestyle="None", label="Class 3 Prediction")
-			ax.plot(data[1,:,0], data[1,:,1], c=colors[4], marker=".",  linestyle="None", label="Class 2 Data", ms="2")
-			ax.plot(data[2,:,0], data[2,:,1], c=colors[5], marker=".",  linestyle="None", label="Class 3 Data", ms="2")
+			ax.plot(data[1,:,0], data[1,:,1], c=colors[4], marker=".",  linestyle="None", label="Class 2 Data")
+			ax.plot(data[2,:,0], data[2,:,1], c=colors[5], marker=".",  linestyle="None", label="Class 3 Data")
 			class_colours = [colors[4], colors[5], colors[1], colors[2]]
 			classes = ["Class 2 Data", "Class 3 Data", "Class 2 Prediction", "Class 3 Prediction"]
 			plotname = "23"+plotname
 
-		elif lc==2:
+		elif idx==1:
 			ax.plot(greenX, greenY, c=colors[0],marker=".", linestyle="None", label="Class 1 Prediction")
 			ax.plot(blueX, blueY, c=colors[2],marker=".", linestyle="None", label="Class 3 Prediction")
-			ax.plot(data[0,:,0], data[0, :, 1], c=colors[3], marker=".", linestyle="None", label="Class 1 Data", ms="2")
-			ax.plot(data[2,:,0],data[2,:,1], c=colors[5], marker=".", linestyle="None", label="Class 3 Data", ms="2")
+			ax.plot(data[0,:,0], data[0, :, 1], c=colors[3], marker=".", linestyle="None", label="Class 1 Data")
+			ax.plot(data[2,:,0],data[2,:,1], c=colors[5], marker=".", linestyle="None", label="Class 3 Data")
 			class_colours = [colors[5], colors[3], colors[0], colors[2]]
 			classes = ["Class 1 Data", "Class 3 Data", "Class 1 Prediction", "Class 3 Prediction"]
 			plotname = "13" + plotname
-		elif lc==3:
+		elif idx==2:
 			ax.plot(greenX, greenY, c = colors[0],marker=".",  linestyle="None", label="Class 1 Prediction")
 			ax.plot(yellowX, yellowY, c = colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
-			ax.plot(data[0,:,0],data[0,:,1], c=colors[3], marker=".",  linestyle="None", label="Class 1 Data", ms="2")
-			ax.plot(data[1,:,0],data[1,:,1], c = colors[4], marker=".",  linestyle="None", label="Class 2 Data", ms="2")
+			ax.plot(data[0,:,0],data[0,:,1], c=colors[3], marker=".",  linestyle="None", label="Class 1 Data")
+			ax.plot(data[1,:,0],data[1,:,1], c = colors[4], marker=".",  linestyle="None", label="Class 2 Data")
 			class_colours = [colors[3], colors[4], colors[0], colors[1]]
 			classes = ["Class 1 Data", "Class 2 Data", "Class 1 Prediction", "Class 2 Prediction"]
 			plotname = "12" + plotname
@@ -113,18 +109,18 @@ def plot(covMat, classname):
 			ax.plot(greenX, greenY, c = colors[0],marker=".",  linestyle="None", label="Class 1 Prediction")
 			ax.plot(yellowX, yellowY, c = colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
 			ax.plot(blueX, blueY, c=colors[2],marker=".",  linestyle="None", label="Class 3 Prediction")
-			ax.plot(data[0,:,0],data[0,:,1], c = colors[3], marker=".",  linestyle="None", label="Class 1 Data", ms="2")
-			ax.plot(data[1,:,0],data[1,:,1], c = colors[4], marker=".",  linestyle="None", label="Class 2 Data", ms="2")
-			ax.plot(data[2,:,0],data[2,:,1], c = colors[5], marker=".",  linestyle="None", label="Class 3 Data", ms="2")
+			ax.plot(data[0,:,0],data[0,:,1], c = colors[3], marker=".",  linestyle="None", label="Class 1 Data")
+			ax.plot(data[1,:,0],data[1,:,1], c = colors[4], marker=".",  linestyle="None", label="Class 2 Data")
+			ax.plot(data[2,:,0],data[2,:,1], c = colors[5], marker=".",  linestyle="None", label="Class 3 Data")
 			class_colours = [colors[3], colors[4], colors[5], colors[0], colors[1], colors[2]]
 			classes = ["Class 1 Data", "Class 2 Data", "Class 3 Data", "Class 1 Prediction", "Class 2 Prediction", "Class 3 Prediction"]
 			plotname = "123" + plotname
 		ax.patch.set_visible(False)
-		if lc == 1:
+		if idx == 0:
 			plt.title("Class 2 vs Class 3")
-		elif lc == 2:
+		elif idx == 1:
 			plt.title("Class 1 vs Class 3")
-		elif lc == 3:
+		elif idx == 2:
 			plt.title("Class 1 vs Class 2")
 		else:
 			plt.title("Class 1 - Class 2 - Class 3")
@@ -161,27 +157,27 @@ def discriminant(dataPt, mean, covariance):
 	total = Wtot_i + w_i + bias_i
 	return total
 
-def tellClass(dataPt, covar, class1, class2, class3):
-	#print(dataPt)
-	discValueC = np.zeros((nClass))
-	#print(discValueC)
-	for k in range(nClass):
-		discValueC[k] = discriminant(dataPt, meanVector[k], covar[k])
+# def tellClass(dataPt, covar, class1, class2, class3):
+# 	#print(dataPt)
+# 	discValueC = np.zeros((nClass))
+# 	#print(discValueC)
+# 	for k in range(nClass):
+# 		discValueC[k] = discriminant(dataPt, meanVector[k], covar[k])
 		
-	if class1 & class2 & class3:
-		return np.argsort(discValueC)[-1]
-	if not class1:
-		if discValueC[1] > discValueC[2]:
-			return 1
-		return 2
-	if not class2:
-		if discValueC[0] > discValueC[2]:
-			return 0
-		return 2
-	if not class3:
-		if discValueC[0] > discValueC[1]:
-			return 0
-		return 1
+# 	if class1 & class2 & class3:
+# 		return np.argsort(discValueC)[-1]
+# 	if not class1:
+# 		if discValueC[1] > discValueC[2]:
+# 			return 1
+# 		return 2
+# 	if not class2:
+# 		if discValueC[0] > discValueC[2]:
+# 			return 0
+# 		return 2
+# 	if not class3:
+# 		if discValueC[0] > discValueC[1]:
+# 			return 0
+# 		return 1
 
 
 nClass = 3
