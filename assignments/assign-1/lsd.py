@@ -7,7 +7,7 @@ import math
 def plot(covMat, classname):
 	minMax = np.zeros((numFeature,numFeature))
 	colors = ['#136906', '#fcbdfc', '#e5ff00', '#ff0000', '#3700ff', '#000000']
-	res = 1000
+	res = 100
 	precision = 0.1
 	bkgPointSize = 0.05
 	dataPointSize = 1
@@ -20,16 +20,6 @@ def plot(covMat, classname):
 
 	# x = np.arange(int(1.2*minMax[0,0]), int(1.2*minMax[0,1]), precision)
 	# y = np.arange(int(1.2*minMax[1,0]), int(1.2*minMax[1,1]), precision)
-
-	# x = np.arange(-40, 40, precision)
-	# y = np.arange(-40, 40, precision)
-	
-	#X,Y = np.meshgrid(x,y)
-
-	# pointClass = np.zeros((nClass, numSample, numFeature))
-	# for i in range(nClass):
-	# 	for j in range(numFeature):
-	# 		pointClass[i,:,j] = data[i,:,j]
 
 	tellClassNum = np.zeros((np.size(x,0)*np.size(y,0), nClass))
 
@@ -48,26 +38,17 @@ def plot(covMat, classname):
 		fig = plt.figure()
 		ax = fig.gca()
 		greenX, greenY, yellowX, yellowY, blueX, blueY = ([] for i in range(6))
-		# pointGX = pointGY = pointYX = pointYY = pointBX = pointBY = ([] for i in range(6))
+
 		class_colours = []
 		classes = []
 		count = 0
 		for i in x:
 			for j in y:	
 
-				# classNum = np.amin(dataPt, covMat, False if lc==1 else True, False if lc==2 else True, False if lc==3 else True)
 				tempArr = np.argsort(tellClassNum[count, :])
 				count += 1
 
 				classNum = tempArr[-2] if tempArr[-1] == idx else tempArr[-1]
-				# if lc == 1:
-				# 	classNum = tempArr[-2] if tempArr[-1] == 0 else tempArr[-1]
-				# elif lc == 2:
-				# 	classNum = tempArr[-2] if tempArr[-1] == 1 else tempArr[-1]
-				# elif lc == 3:
-				# 	classNum = tempArr[-2] if tempArr[-1] == 2 else tempArr[-1]
-				# else:
-				# 	classNum = tempArr[-1]
 
 				if classNum == 0:
 					greenX.append(i)
@@ -136,7 +117,6 @@ def plot(covMat, classname):
 		plt.legend(recs, classes, loc='upper right')
 		plt.savefig(plotname)
 		print("CAT")
-		#plt.show()
 
 #defining discriminant function
 def discriminant(dataPt, mean, covariance):
@@ -179,32 +159,49 @@ def discriminant(dataPt, mean, covariance):
 # 			return 0
 # 		return 1
 
-
 nClass = 3
 
-file = open("class1.txt")
-li = [];
+def fileHandle(fileName):
+	file = open(fileName)
+	tempList = [];
 
-for line in file:
-	ali = line.rstrip('\n').split(' ')
-	li.append(ali)
+	for line in file:
+		teLine = line.rstrip('\n').split(' ')
+		tempList.append(teLine)
 
-file.close()
-numSample = len(li)
-numFeature = len(li[0])
+	file.close()
+	return tempList
 
-data = np.zeros((nClass, numSample, numFeature))
-data[0] = np.array(li)
-data[1] = np.loadtxt("class2.txt")
-data[2] = np.loadtxt("class3.txt")
+mainList = [];
+for i in range(nClass):
+	temp = [];
+	mainList.append(temp)
+
+mainList[0] = fileHandle("class1.txt")
+mainList[1] = fileHandle("class2.txt")
+mainList[2] = fileHandle("class3.txt")
+
+numSample = np.zeros((nClass))
+numFeature = len(mainList[0][0])
+
+for i in range(nClass):
+	numSample[i] = len(mainList[i])
+
+
+# data = np.zeros((nClass, numSample, numFeature))
+# data[0] = np.array(li)
+# data[1] = np.loadtxt("class2.txt")
+# data[2] = np.loadtxt("class3.txt")
 
 #meanVectors
 #Can also use in-built function of numpy -- numpy.mean
+data = np.array(mainList).astype(np.float)
+print(data)
 
 meanVector = np.zeros((nClass, numFeature, 1))
 for i in range(nClass):
 	meanVector[i] = (np.sum(data[i],axis=0)).reshape((numFeature,1))
-	meanVector[i] /= numSample
+	meanVector[i] /= numSample[i]
 
 # Covariance matrix
 # can use inbuilt cov func too
@@ -218,7 +215,7 @@ for i in range(nClass):
 			np.subtract(feature1, meanVector[i, j, 0])
 			np.subtract(feature2, meanVector[i, k, 0])
 			covMatrix[i] = np.matmul(np.transpose(feature1),feature2)
-			covMatrix[i] /= (numSample-1)
+			covMatrix[i] /= (numSample[i]-1)
 
 
 # # now plotting points
@@ -291,28 +288,28 @@ for i in range(nClass):
 
 #for classifier - 4, use original matrix covMatrix
 
-file = open("classt1.txt")
-li = [];
+testList = [];
+for i in range(nClass):
+	temp = [];
+	testList.append(temp)
 
-for line in file:
-	ali = line.rstrip('\n').split(' ')
-	li.append(ali)
+testList[0] = fileHandle("classt1.txt")
+testList[1] = fileHandle("classt2.txt")
+testList[2] = fileHandle("classt3.txt")
 
-file.close()
-testSample = len(li)
+testSample = np.zeros((nClass))
 
-testData = np.zeros((nClass, testSample, numFeature))
-testData[0] = np.array(li)
-testData[1] = np.loadtxt("classt2.txt")
-testData[2] = np.loadtxt("classt3.txt")
+for i in range(nClass):
+	testSample[i] = len(testList[i])
 
+testData = np.array(testList).astype(np.float)
 
 
 #classifier - 1
 predictClassClf1 = np.zeros((nClass,nClass))
 
 for i in range(nClass):
-	for j in range(testSample):
+	for j in range(int(testSample[i])):
 		discValue = np.zeros(nClass)
 		for k in range(nClass):
 			discValue[k] = discriminant(testData[i][j],meanVector[k],covMatrixCfier1[k])
@@ -324,7 +321,7 @@ for i in range(nClass):
 predictClassClf2 = np.zeros((nClass,nClass))
 
 for i in range(nClass):
-	for j in range(testSample):
+	for j in range(int(testSample[i])):
 		discValue = np.zeros(nClass)
 		for k in range(nClass):
 			discValue[k] = discriminant(testData[i][j],meanVector[k],covMatrixCfier2[k])
@@ -336,7 +333,7 @@ for i in range(nClass):
 predictClassClf3 = np.zeros((nClass,nClass))
 
 for i in range(nClass):
-	for j in range(testSample):
+	for j in range(int(testSample[i])):
 		discValue = np.zeros(nClass)
 		for k in range(nClass):
 			discValue[k] = discriminant(testData[i][j],meanVector[k],covMatrixCfier3[k])
@@ -347,7 +344,7 @@ for i in range(nClass):
 predictClassClf4 = np.zeros((nClass,nClass))
 
 for i in range(nClass):
-	for j in range(testSample):
+	for j in range(int(testSample[i])):
 		discValue = np.zeros(nClass)
 		for k in range(nClass):
 			discValue[k] = discriminant(testData[i][j],meanVector[k],covMatrix[k])
