@@ -87,8 +87,8 @@ def plot(covMat, classname):
 		if lc==1:
 			ax.plot(yellowX, yellowY, c=colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
 			ax.plot(blueX, blueY, c=colors[2],marker=".",  linestyle="None", label="Class 3 Prediction")
-			ax.plot(data[1,:,0], data[1,:,1], c=colors[4], marker=".",  linestyle="None", label="Class 2 Data")
-			ax.plot(data[2,:,0], data[2,:,1], c=colors[5], marker=".",  linestyle="None", label="Class 3 Data")
+			ax.plot(data[1,:,0], data[1,:,1], c=colors[4], marker=".",  linestyle="None", label="Class 2 Data", ms="2")
+			ax.plot(data[2,:,0], data[2,:,1], c=colors[5], marker=".",  linestyle="None", label="Class 3 Data", ms="2")
 			class_colours = [colors[4], colors[5], colors[1], colors[2]]
 			classes = ["Class 2 Data", "Class 3 Data", "Class 2 Prediction", "Class 3 Prediction"]
 			plotname = "23"+plotname
@@ -96,16 +96,16 @@ def plot(covMat, classname):
 		elif lc==2:
 			ax.plot(greenX, greenY, c=colors[0],marker=".", linestyle="None", label="Class 1 Prediction")
 			ax.plot(blueX, blueY, c=colors[2],marker=".", linestyle="None", label="Class 3 Prediction")
-			ax.plot(data[0,:,0], data[0, :, 1], c=colors[3], marker=".", linestyle="None", label="Class 1 Data")
-			ax.plot(data[2,:,0],data[2,:,1], c=colors[5], marker=".", linestyle="None", label="Class 3 Data")
+			ax.plot(data[0,:,0], data[0, :, 1], c=colors[3], marker=".", linestyle="None", label="Class 1 Data", ms="2")
+			ax.plot(data[2,:,0],data[2,:,1], c=colors[5], marker=".", linestyle="None", label="Class 3 Data", ms="2")
 			class_colours = [colors[5], colors[3], colors[0], colors[2]]
 			classes = ["Class 1 Data", "Class 3 Data", "Class 1 Prediction", "Class 3 Prediction"]
 			plotname = "13" + plotname
 		elif lc==3:
 			ax.plot(greenX, greenY, c = colors[0],marker=".",  linestyle="None", label="Class 1 Prediction")
 			ax.plot(yellowX, yellowY, c = colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
-			ax.plot(data[0,:,0],data[0,:,1], c=colors[3], marker=".",  linestyle="None", label="Class 1 Data")
-			ax.plot(data[1,:,0],data[1,:,1], c = colors[4], marker=".",  linestyle="None", label="Class 2 Data")
+			ax.plot(data[0,:,0],data[0,:,1], c=colors[3], marker=".",  linestyle="None", label="Class 1 Data", ms="2")
+			ax.plot(data[1,:,0],data[1,:,1], c = colors[4], marker=".",  linestyle="None", label="Class 2 Data", ms="2")
 			class_colours = [colors[3], colors[4], colors[0], colors[1]]
 			classes = ["Class 1 Data", "Class 2 Data", "Class 1 Prediction", "Class 2 Prediction"]
 			plotname = "12" + plotname
@@ -113,9 +113,9 @@ def plot(covMat, classname):
 			ax.plot(greenX, greenY, c = colors[0],marker=".",  linestyle="None", label="Class 1 Prediction")
 			ax.plot(yellowX, yellowY, c = colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
 			ax.plot(blueX, blueY, c=colors[2],marker=".",  linestyle="None", label="Class 3 Prediction")
-			ax.plot(data[0,:,0],data[0,:,1], c = colors[3], marker=".",  linestyle="None", label="Class 1 Data")
-			ax.plot(data[1,:,0],data[1,:,1], c = colors[4], marker=".",  linestyle="None", label="Class 2 Data")
-			ax.plot(data[2,:,0],data[2,:,1], c = colors[5], marker=".",  linestyle="None", label="Class 3 Data")
+			ax.plot(data[0,:,0],data[0,:,1], c = colors[3], marker=".",  linestyle="None", label="Class 1 Data", ms="2")
+			ax.plot(data[1,:,0],data[1,:,1], c = colors[4], marker=".",  linestyle="None", label="Class 2 Data", ms="2")
+			ax.plot(data[2,:,0],data[2,:,1], c = colors[5], marker=".",  linestyle="None", label="Class 3 Data", ms="2")
 			class_colours = [colors[3], colors[4], colors[5], colors[0], colors[1], colors[2]]
 			classes = ["Class 1 Data", "Class 2 Data", "Class 3 Data", "Class 1 Prediction", "Class 2 Prediction", "Class 3 Prediction"]
 			plotname = "123" + plotname
