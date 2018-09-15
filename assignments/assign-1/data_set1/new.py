@@ -142,9 +142,11 @@ def plot(covMat, classname):
 			z2 = ml.bivariate_normal(X, Y, sigmax=sqrt(covMat[1, 0, 0]), sigmay=sqrt(covMat[1, 1, 1]), mux=meanVector[1, 0], muy=meanVector[1, 0], sigmaxy=covMat[1, 1, 0])
 			z3 = ml.bivariate_normal(X, Y, sigmax=sqrt(covMat[2, 0, 0]), sigmay=sqrt(covMat[2, 1, 1]), mux=meanVector[2, 0], muy=meanVector[2, 0], sigmaxy=covMat[2, 1, 0])
 			
-			bx.contour(X, Y, z1,  colors='black')
-			bx.contour(X, Y, z2, colors='black')
-			bx.contour(X, Y, z3, colors='black')
+			bx.contour(X, Y, z1, colors='black', label="Class 1", color='g')
+			bx.contour(X, Y, z2, colors='black', label="Class 2", color='y')
+			bx.contour(X, Y, z3, colors='black', label="Class 3", color='b')
+			plt.title(classname+" Contours")
+			plt.legend()
 			plt.show()
 
 def gaussianDensity(x, y, mean, covariance):
