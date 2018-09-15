@@ -1,8 +1,6 @@
-#use of re module for getting dimension of feature vector
-import re, numpy as np
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-import math
 
 def plot(covMat, classname):
 	minMax = np.zeros((numFeature,2))
@@ -135,6 +133,18 @@ def plot(covMat, classname):
 		plt.savefig(plotname)
 		#plt.show()
 		print("CAT")
+
+def gaussianDensity(dataPt, mean, covariance):
+	dataPt = np.transpose(dataPt)
+	deviation = dataPt - mean
+	tempTerm = np.matmul(np.transpose(deviation), np.linalg.inv(covariance))
+	tempTerm = np.matmul(tempTerm, deviation)
+	tempTerm = -0.5*tempTerm
+	tempTerm = np.exp(tempTerm)
+	deter = np.linalg.det(covariance)
+	total = (deter**(-1./2))*(tempTerm)
+	total = (2*np.pi)**(numFeature/2.)
+	return total
 
 #defining discriminant function
 def discriminant(dataPt, mean, covariance):
@@ -334,7 +344,7 @@ for i in range(nClass):
 		discValue = np.zeros(nClass)
 		for k in range(nClass):
 			discValue[k] = discriminant(testList[i][j],meanVector[k],covMatrixCfier1[k])
-			predictClassClf1[i][np.argmax(discValue)] += 1
+		predictClassClf1[i][np.argmax(discValue)] += 1
 
 #end -- classifier - 1
 
@@ -346,7 +356,7 @@ for i in range(nClass):
 		discValue = np.zeros(nClass)
 		for k in range(nClass):
 			discValue[k] = discriminant(testList[i][j],meanVector[k],covMatrixCfier2[k])
-			predictClassClf2[i][np.argmax(discValue)] += 1
+		predictClassClf2[i][np.argmax(discValue)] += 1
 
 #end -- classifier - - 2
 
@@ -358,7 +368,7 @@ for i in range(nClass):
 		discValue = np.zeros(nClass)
 		for k in range(nClass):
 			discValue[k] = discriminant(testList[i][j],meanVector[k],covMatrixCfier3[k])
-			predictClassClf3[i][np.argmax(discValue)] += 1
+		predictClassClf3[i][np.argmax(discValue)] += 1
 #end Classifier-3
 
 #classifier - 4
@@ -369,10 +379,13 @@ for i in range(nClass):
 		discValue = np.zeros(nClass)
 		for k in range(nClass):
 			discValue[k] = discriminant(testList[i][j],meanVector[k],covMatrix[k])
-			predictClassClf4[i][np.argmax(discValue)] += 1
+		predictClassClf4[i][np.argmax(discValue)] += 1
 
 #end -- Classifier - 4
-plot(covMatrixCfier1, "class1_")
+# plot(covMatrixCfier1, "class1_")
 #plot(covMatrixCfier2, "class2_")
 #plot(covMatrixCfier3, "class3_")
 #plot(covMatrix, "class4_")
+dt = np.array([1,2])
+wtf = gaussianDensity(dt, meanVector[0], covMatrixCfier1[0])
+print(wtf)
