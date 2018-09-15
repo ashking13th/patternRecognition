@@ -52,8 +52,8 @@ def plot(covMat, classname):
 
 	count = 0
 	for idx in range(nClass+1):
-		fig1 = plt.figure(1)
-		ax = fig1.gca()
+		'''# fig1 = plt.figure(1)
+		# ax = fig1.gca()
 	
 		greenX, greenY, yellowX, yellowY, blueX, blueY = ([] for i in range(6))
 
@@ -78,7 +78,7 @@ def plot(covMat, classname):
 					blueX.append(i)
 					blueY.append(j)
 		plotname = "plot.png"
-
+		
 		if idx==0:
 			ax.plot(yellowX, yellowY, c=colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
 			ax.plot(blueX, blueY, c=colors[2],marker=".",  linestyle="None", label="Class 3 Prediction")
@@ -134,7 +134,7 @@ def plot(covMat, classname):
 
 		plt.legend(recs, classes, loc='upper right')
 		#plt.savefig(plotname)
-		plt.show()
+		plt.show()'''
 		print("CAT")
 		if idx == 3:
 			fig2 = plt.figure(2)
@@ -142,32 +142,30 @@ def plot(covMat, classname):
 
 			X,Y = np.meshgrid(x,y)
 
-			'''
-				We can use bivariate_normal() also for Z
-			'''
-			bx.plot(greenX, greenY, c = colors[0],marker=".",  linestyle="None", label="Class 1 Prediction")
-			bx.plot(yellowX, yellowY, c = colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
-			bx.plot(blueX, blueY, c=colors[2],marker=".",  linestyle="None", label="Class 3 Prediction")
+			#bx.plot(greenX, greenY, c = colors[0],marker=".",  linestyle="None", label="Class 1 Prediction", mew=0.1)
+			#bx.plot(yellowX, yellowY, c = colors[1],marker=".",  linestyle="None", label="Class 2 Prediction", mew=0.1)
+			#bx.plot(blueX, blueY, c=colors[2],marker=".",  linestyle="None", label="Class 3 Prediction",mew=0.1)
 			bx.plot(mainList[0][:,0],mainList[0][:,1], c = colors[3], marker=".",  linestyle="None", label="Class 1 Data", ms='2')
 			bx.plot(mainList[1][:,0],mainList[1][:,1], c = colors[4], marker=".",  linestyle="None", label="Class 2 Data", ms='2')
 			bx.plot(mainList[2][:,0],mainList[2][:,1], c = colors[5], marker=".",  linestyle="None", label="Class 3 Data", ms='2')
-			class_colours = [colors[3], colors[4], colors[5], colors[0], colors[1], colors[2]]
-			classes = ["Class 1 Data", "Class 2 Data", "Class 3 Data", "Class 1 Prediction", "Class 2 Prediction", "Class 3 Prediction"]
+			class_colours = [colors[3], colors[4], colors[5], colors[0], "#824003", "#cc00ff"]
+			classes = ["Class 1 Data", "Class 2 Data", "Class 3 Data", "Class 1 Contours", "Class 2 Contours", "Class 3 Contours"]
 
-			bx.contour(X, Y, Z[0], colors='black')
-			bx.contour(X, Y, Z[1], colors='black')
-			bx.contour(X, Y, Z[2], colors='black')
-
-			plt.xlabel('X')
-			plt.ylabel('Y')
+			bx.contour(X, Y, Z[0], alpha=1, linewidth=10, colors=colors[0], label="Class 1 Contour")
+			bx.contour(X, Y, Z[1], alpha=1, linewidth=10, colors="#824003", label="Class 2 Contour")
+			bx.contour(X, Y, Z[2], alpha=1, linewidth=10, colors="#cc00ff", label="Class 3 Contour")
 
 			recs = []
-			for i in range(0,len(class_colours)):
-				recs.append(mpatches.Rectangle((0,0),1,1,fc=class_colours[i]))
+			for i in range(0, len(class_colours)):
+				recs.append(mpatches.Rectangle((0, 0), 1, 1, fc=class_colours[i]))
+			plotname = classname+"_contours.png"
 
 			plt.legend(recs, classes, loc='upper right')
-			plt.title("Contours and Training Data")
-			fig2.show()
+			plt.title("Contours with training data")
+			plt.xlabel('X')
+			plt.ylabel('Y')
+			plt.savefig(plotname)
+			plt.show()
 
 def gaussianDensity(dataPt, mean, covariance):
 
