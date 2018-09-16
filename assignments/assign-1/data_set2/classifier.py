@@ -7,7 +7,9 @@ from math import sqrt
 def plot(covMat, classname):
 	minMax = np.zeros((numFeature,2))
 	colors = ['#136906', '#fcbdfc', '#e5ff00', '#ff0000', '#3700ff', '#000000']
-	res = 100
+
+	# Resolution affects the time required to process.
+	res = 1000
 
 	count = 0
 	for i in range(nClass):
@@ -30,71 +32,79 @@ def plot(covMat, classname):
 	tellClassNum = np.zeros((np.size(x,0)*np.size(y,0), nClass))
 
 	count = 0
-	for i in x:
-		for j in y:
+	for j in y:
+		for i in x:
 			for k in range(nClass):
 				dataPt = np.array([i,j])
 				tellClassNum[count, k] = discriminant(dataPt, meanVector[k], covMat[k])
 			count += 1
+
+	lenX = np.size(x,0)
+	Z = np.zeros((nClass, lenX, lenX))
+
+	for k in range(nClass):
+		count = 0
+		for j in y:
+			for i in x:
+				dataPt = np.array([i,j])
+				fi = int(count/lenX)
+				sec = count%lenX
+				Z[k, fi, sec] = gaussianDensity(dataPt, meanVector[k], covMat[k])
+				count += 1	
 
 	count = 0
 	for idx in range(nClass+1):
 		fig1 = plt.figure(1)
 		ax = fig1.gca()
 	
-		greenX, greenY, yellowX, yellowY, blueX, blueY = ([] for i in range(6))
+		plotClass = []
+		for cl in range(nClass):
+			temp1 = []
+			for fe in range(numFeature):
+				temp1.append([])
+			plotClass.append(temp1)
 
 		class_colours = []
 		classes = []
 		count = 0
-		for i in x:
-			for j in y:	
-
+		for j in y:
+			for i in x:	
 				tempArr = np.argsort(tellClassNum[count, :])
 				count += 1
-
 				classNum = tempArr[-2] if tempArr[-1] == idx else tempArr[-1]
+				plotClass[classNum][0].append(i)
+				plotClass[classNum][1].append(j)
 
-				if classNum == 0:
-					greenX.append(i)
-					greenY.append(j)
-				if classNum == 1:
-					yellowX.append(i)
-					yellowY.append(j)
-				if classNum == 2:
-					blueX.append(i)
-					blueY.append(j)
 		plotname = "plot.png"
-
+		
 		if idx==0:
-			ax.plot(yellowX, yellowY, c=colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
-			ax.plot(blueX, blueY, c=colors[2],marker=".",  linestyle="None", label="Class 3 Prediction")
+			ax.plot(plotClass[1][0], plotClass[1][1], c=colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
+			ax.plot(plotClass[2][0], plotClass[2][1], c=colors[2],marker=".",  linestyle="None", label="Class 3 Prediction")
 			ax.plot(mainList[1][:,0], mainList[1][:,1], c=colors[4], marker=".",  linestyle="None", label="Class 2 Data", ms='2')
 			ax.plot(mainList[2][:,0], mainList[2][:,1], c=colors[5], marker=".",  linestyle="None", label="Class 3 Data", ms='2')
 			class_colours = [colors[4], colors[5], colors[1], colors[2]]
 			classes = ["Class 2 Data", "Class 3 Data", "Class 2 Prediction", "Class 3 Prediction"]
 			plotname = "23"+plotname
-
 		elif idx==1:
-			ax.plot(greenX, greenY, c=colors[0],marker=".", linestyle="None", label="Class 1 Prediction")
-			ax.plot(blueX, blueY, c=colors[2],marker=".", linestyle="None", label="Class 3 Prediction")
+			ax.plot(plotClass[0][0], plotClass[0][1], c=colors[0],marker=".", linestyle="None", label="Class 1 Prediction")
+			ax.plot(plotClass[2][0], plotClass[2][1], c=colors[2],marker=".", linestyle="None", label="Class 3 Prediction")
 			ax.plot(mainList[0][:,0], mainList[0][:, 1], c=colors[3], marker=".", linestyle="None", label="Class 1 Data", ms='2')
 			ax.plot(mainList[2][:,0],mainList[2][:,1], c=colors[5], marker=".", linestyle="None", label="Class 3 Data", ms='2')
 			class_colours = [colors[5], colors[3], colors[0], colors[2]]
 			classes = ["Class 1 Data", "Class 3 Data", "Class 1 Prediction", "Class 3 Prediction"]
 			plotname = "13" + plotname
 		elif idx==2:
-			ax.plot(greenX, greenY, c = colors[0],marker=".",  linestyle="None", label="Class 1 Prediction")
-			ax.plot(yellowX, yellowY, c = colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
+			ax.plot(plotClass[0][0], plotClass[0][1], c = colors[0],marker=".",  linestyle="None", label="Class 1 Prediction")
+			ax.plot(plotClass[1][0], plotClass[1][1], c = colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
 			ax.plot(mainList[0][:,0],mainList[0][:,1], c=colors[3], marker=".",  linestyle="None", label="Class 1 Data", ms='2')
 			ax.plot(mainList[1][:,0],mainList[1][:,1], c = colors[4], marker=".",  linestyle="None", label="Class 2 Data", ms='2')
 			class_colours = [colors[3], colors[4], colors[0], colors[1]]
 			classes = ["Class 1 Data", "Class 2 Data", "Class 1 Prediction", "Class 2 Prediction"]
 			plotname = "12" + plotname
 		else:
-			ax.plot(greenX, greenY, c = colors[0],marker=".",  linestyle="None", label="Class 1 Prediction")
-			ax.plot(yellowX, yellowY, c = colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
-			ax.plot(blueX, blueY, c=colors[2],marker=".",  linestyle="None", label="Class 3 Prediction")
+			ax.plot(plotClass[0][0], plotClass[0][1], c = colors[0],marker=".",  linestyle="None", label="Class 1 Prediction")
+			ax.plot(plotClass[1][0], plotClass[1][1], c = colors[1],marker=".",  linestyle="None", label="Class 2 Prediction")
+			ax.plot(plotClass[2][0], plotClass[2][1], c=colors[2],marker=".",  linestyle="None", label="Class 3 Prediction")
 			ax.plot(mainList[0][:,0],mainList[0][:,1], c = colors[3], marker=".",  linestyle="None", label="Class 1 Data", ms='2')
 			ax.plot(mainList[1][:,0],mainList[1][:,1], c = colors[4], marker=".",  linestyle="None", label="Class 2 Data", ms='2')
 			ax.plot(mainList[2][:,0],mainList[2][:,1], c = colors[5], marker=".",  linestyle="None", label="Class 3 Data", ms='2')
@@ -110,64 +120,55 @@ def plot(covMat, classname):
 			plt.title("Class 1 vs Class 2")
 		else:
 			plt.title("Class 1 - Class 2 - Class 3")
-
 		plotname = classname + plotname
 		plt.xlabel('X')
 		plt.ylabel('Y')
-
 		recs = []
 		for i in range(0,len(class_colours)):
 			recs.append(mpatches.Rectangle((0,0),1,1,fc=class_colours[i]))
-
 		plt.legend(recs, classes, loc='upper right')
 		#plt.savefig(plotname)
 		plt.show()
-		print("CAT")
 		if idx == 3:
 			fig2 = plt.figure(2)
 			bx = fig2.gca()
-			# dataPt= np.array([i, j])
-			zlist = []
-			print("ffff")
-			zlist.append(gaussianDensity(greenX, greenY, meanVector[0], covMat[0]))
-			zlist.append(gaussianDensity(yellowX, yellowY, meanVector[1], covMat[1]))
-			zlist.append(gaussianDensity(blueX, blueY, meanVector[2], covMat[2]))
-			# print(zlist[0])
 
 			X,Y = np.meshgrid(x,y)
 
-			print(covMat)
+			bx.plot(mainList[0][:,0],mainList[0][:,1], c = colors[3], marker=".",  linestyle="None", label="Class 1 Data", ms='2')
+			bx.plot(mainList[1][:,0],mainList[1][:,1], c = colors[4], marker=".",  linestyle="None", label="Class 2 Data", ms='2')
+			bx.plot(mainList[2][:,0],mainList[2][:,1], c = colors[5], marker=".",  linestyle="None", label="Class 3 Data", ms='2')
+			class_colours = [colors[3], colors[4], colors[5], colors[0], "#824003", "#cc00ff"]
+			classes = ["Class 1 Data", "Class 2 Data", "Class 3 Data", "Class 1 Contours", "Class 2 Contours", "Class 3 Contours"]
 
-			z1 = ml.bivariate_normal(X, Y, sigmax=sqrt(covMat[0, 0, 0]), sigmay=sqrt(covMat[0, 1, 1]), mux=meanVector[0, 0], muy=meanVector[0, 1], sigmaxy=covMat[0, 1, 0])
-			z2 = ml.bivariate_normal(X, Y, sigmax=sqrt(covMat[1, 0, 0]), sigmay=sqrt(covMat[1, 1, 1]), mux=meanVector[1, 0], muy=meanVector[1, 0], sigmaxy=covMat[1, 1, 0])
-			z3 = ml.bivariate_normal(X, Y, sigmax=sqrt(covMat[2, 0, 0]), sigmay=sqrt(covMat[2, 1, 1]), mux=meanVector[2, 0], muy=meanVector[2, 0], sigmaxy=covMat[2, 1, 0])
-			
-			bx.contour(X, Y, z1, colors='black', label="Class 1", color='g')
-			bx.contour(X, Y, z2, colors='black', label="Class 2", color='y')
-			bx.contour(X, Y, z3, colors='black', label="Class 3", color='b')
-			plt.title(classname+" Contours")
-			plt.legend()
+			bx.contour(X, Y, Z[0], alpha=1, linewidth=10, colors=colors[0], label="Class 1 Contour")
+			bx.contour(X, Y, Z[1], alpha=1, linewidth=10, colors="#824003", label="Class 2 Contour")
+			bx.contour(X, Y, Z[2], alpha=1, linewidth=10, colors="#cc00ff", label="Class 3 Contour")
+
+			recs = []
+			for i in range(0, len(class_colours)):
+				recs.append(mpatches.Rectangle((0, 0), 1, 1, fc=class_colours[i]))
+			plotname = classname+"_contours.png"
+
+			plt.legend(recs, classes, loc='upper right')
+			plt.title("Contours with training data")
+			plt.xlabel('X')
+			plt.ylabel('Y')
+			#plt.savefig(plotname)
 			plt.show()
 
-def gaussianDensity(x, y, mean, covariance):
-		# print(tempTerm)
-	z = []
-	for i in range(len(x)):
-		dataPt = np.array([x[i], y[i]])
-		# print(i," ",x[i]," ",y[i])
-		dataPt = np.transpose(dataPt)
-		# print(dataPt)
-		deviation = dataPt - mean
-		tempTerm = np.matmul(np.transpose(deviation), np.linalg.inv(covariance))
-		tempTerm = np.matmul(tempTerm, deviation)
-		tempTerm = -0.5*tempTerm
-		tempTerm = np.exp(tempTerm)
-		deter = np.linalg.det(covariance)
-		total = (deter**(-1./2))*(tempTerm)
-		total = ((2*np.pi)**(numFeature/2.))*total
-		z.append(total)
-	
-	return np.array(z)
+def gaussianDensity(dataPt, mean, covariance):
+
+	dataPt = dataPt.reshape(numFeature,1)	
+	deviation = dataPt - mean
+	tempTerm = np.matmul(np.transpose(deviation), np.linalg.inv(covariance))
+	tempTerm = np.matmul(tempTerm, deviation)
+	tempTerm = -0.5*tempTerm
+	tempTerm = np.exp(tempTerm)
+	deter = np.linalg.det(covariance)
+	total = (deter**(-1./2))*(tempTerm)
+	total = ((2*np.pi)**(numFeature/2.))*total
+	return total
 
 #defining discriminant function
 def discriminant(dataPt, mean, covariance):
