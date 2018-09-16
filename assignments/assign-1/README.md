@@ -6,11 +6,13 @@ There are three data sets:
   1.  data_set1: Linear data 
   2.  data_set2: Non-Linear Data 
   3.  data_set3: Real world data
+  
 Each folder contains:
   Three training data sets:
   1.  class1.txt
   2.  class2.txt
   3.  class3.txt
+  
  and three test data sets:
   1.  classt1.txt
   2.  classt2.txt
