@@ -15,6 +15,7 @@ i = 0
 for root, dirs, files in os.walk(args["source"]):
     for f in files:
         i += 1
+        print("Image No. : ",i)
         path = os.path.relpath(os.path.join(root, f), ".")
         target = os.path.relpath(os.path.join(root, os.path.splitext(f)[0]))
         if args["type"] == "1":
