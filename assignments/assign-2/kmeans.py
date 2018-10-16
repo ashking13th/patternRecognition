@@ -92,9 +92,11 @@ for i in range(numOfClusters):
 
 meanVector = np.array(meanVector)
 
+counter = 0
 while True:
 	J = assignDataPt()
-	print("J: ", J, " ; Jprev: ", Jprev)
+	print(counter," : J: ", J)
+	counter += 1
 	if Jprev != -1 and Jprev - J < threshold:
 		break
 	Jprev = J

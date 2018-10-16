@@ -85,3 +85,18 @@ def updateGammaVect(piVect, noOfPoints, X, covMatVect, meanVect, clusters):
 
 def updateParameterVectors():
     pass
+
+def logLikelihood(noOfPoints, clusters, piVect, X, meanVect, covMatVect):
+    l = 0
+    for n in range(noOfPoints):
+        for k in range(clusters):
+            l += piVect[k]*gaussian(covMatVect[k], X[n], meanVect[k])
+    return np.log(l)
+
+def algorithmEM(threshold, noOfPoints, X, dimensions, clusters, gammaVect, piVect, covMatVect, meanVect):
+    lPrev = 100
+    lCurrent = 0
+
+    while (lPrev-lCurrent)>threshold:
+        gammaVect = updateGammaVect(piVect, noOfPoints,X, covMatVect, meanVect, clusters)
+        
