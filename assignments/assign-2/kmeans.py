@@ -94,6 +94,7 @@ meanVector = np.array(meanVector)
 
 while True:
 	J = assignDataPt()
+	print("J: ", J, " ; Jprev: ", Jprev)
 	if Jprev != -1 and Jprev - J < threshold:
 		break
 	Jprev = J
