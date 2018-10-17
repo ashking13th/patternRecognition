@@ -7,7 +7,7 @@ import os, argparse, math, random
 	Now, for each image we want to have a k(32) dimensional bag of visual words
 '''
 
-numOfClusters = 32
+numOfClusters = 2
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
@@ -63,12 +63,14 @@ def reCalcMean():
 	for i in range(numOfClusters):
 		meanVector[i] =  findMean(clusters[i])
 
+print("Process start")
 for root, dirs, files in os.walk(args["source"]):
-    for f in files:
-        path = os.path.relpath(os.path.join(root, f), ".")
-       	fileHandle(path)
-        lengthOfFile.append(len(wholeData)-cnt)
-        cnt = len(wholeData)
+	for f in files:
+		path = os.path.relpath(os.path.join(root, f), ".")
+		print("reading file: ",path)
+		fileHandle(path)
+		lengthOfFile.append(len(wholeData)-cnt)
+		cnt = len(wholeData)
 
 
 def allUnique(x):
