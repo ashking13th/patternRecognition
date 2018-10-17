@@ -9,7 +9,7 @@ from datetime import datetime
 '''
 start_time = datetime.now()
 
-numOfClusters = 32
+numOfClusters = 2
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
@@ -47,9 +47,7 @@ def assignDataPt():
 	for dataPt in wholeData:
 		distVector = distArray(dataPt)
 		noCl = np.argmin(distVector)
-		# clusters[noCl].append(dataPt)
-		clusters[noCl] += dataPt	#
-		clustersSize[noCl] += 1		#
+		clusters[noCl].append(dataPt)
 		costFunc += distVector[noCl]
 	return costFunc
 
@@ -65,10 +63,8 @@ def reCalcMean():
 	for i in range(numOfClusters):
 		# print("cluser = ", clusters[i], ": i = ", i)
 		# print("mean by np = ", np.mean(np.array(clusters[i]), axis=0))
-		# meanVector[i] = np.mean(np.array(clusters[i]), axis=0)#findMean(clusters[i])
-		meanVector[i] = clusters[i]/clustersSize[i]
+		meanVector[i] = np.mean(np.array(clusters[i]), axis=0)#findMean(clusters[i])
 		clusters[i] = []
-		clustersSize[i] = 0
 
 
 def allUnique(x):
@@ -111,7 +107,7 @@ while True:
 	J = assignDataPt()
 	print(counter," : J: ", J, "\t : ",(Jprev-J)," : ",(datetime.now()-loopStarttime))
 	counter += 1
-	if Jprev != -1 and Jprev - J < threshold:
+	if Jprev != -1 and abs(Jprev - J) < threshold:
 		break
 	Jprev = J
 	reCalcMean()
