@@ -29,17 +29,16 @@ def fileHandle(fileName):
 	file.close()
 	return
 
-def euclidDist(centroid, dataPt):
-	dataPt = np.array(dataPt)
-	ldist = centroid-dataPt
-	return np.sum(np.transpose(ldist)*ldist)
+# def euclidDist(centroid, dataPt):
+# 	dataPt = np.array(dataPt)
+# 	ldist = centroid-dataPt
+# 	return np.sum(np.transpose(ldist)*ldist)
 
 def distArray(dataPt):
 	distVector = np.zeros((numOfClusters))
 	for ind in range(numOfClusters):
 		norm = np.linalg.norm(meanVector[ind] - dataPt)
-		distVector[ind] = euclidDist(meanVector[ind], dataPt)
-
+		distVector[ind] = norm #euclidDist(meanVector[ind], dataPt)
 	return distVector
 
 #assignment of clusters
@@ -48,24 +47,28 @@ def assignDataPt():
 	for dataPt in wholeData:
 		distVector = distArray(dataPt)
 		noCl = np.argmin(distVector)
-		clusters[noCl].append(dataPt)
+		# clusters[noCl].append(dataPt)
+		clusters[noCl] += dataPt	#
+		clustersSize[noCl] += 1		#
 		costFunc += distVector[noCl]
 	return costFunc
 
-def findMean(component):
-	total = np.zeros((len(component[0])))
-	for point in component:
-		total += np.array(point)
-	total /= len(component)
-	return total
+# def findMean(component):
+# 	total = np.zeros((len(component[0])))
+# 	for point in component:
+# 		total += np.array(point)
+# 	total /= len(component)
+# 	return total
 
 
 def reCalcMean():
 	for i in range(numOfClusters):
 		# print("cluser = ", clusters[i], ": i = ", i)
 		# print("mean by np = ", np.mean(np.array(clusters[i]), axis=0))
-		meanVector[i] = findMean(clusters[i])
+		# meanVector[i] = np.mean(np.array(clusters[i]), axis=0)#findMean(clusters[i])
+		meanVector[i] = clusters[i]/clustersSize[i]
 		clusters[i] = []
+		clustersSize[i] = 0
 
 
 def allUnique(x):
@@ -94,6 +97,7 @@ Jprev = -1.0			#previous Cost function
 threshold = 1e-3
 
 clusters = []
+clustersSize = [0]*numOfClusters
 for i in range(numOfClusters):
 	clusters.append([])
 
