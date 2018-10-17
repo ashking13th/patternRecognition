@@ -1,11 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os, argparse, math, random
+from datetime import datetime
 
 ''' 
 	Select k distinct random vectors from the features dataset for each (class(combining all images data))
 	Now, for each image we want to have a k(32) dimensional bag of visual words
 '''
+start_time = datetime.now()
 
 numOfClusters = 2
 
@@ -13,14 +15,12 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
 args = vars(ap.parse_args())
 
-cnt = 0;
-wholeData = [];
-lengthOfFile = [];
+cnt = 0
+wholeData = []
+lengthOfFile = []
 
 def fileHandle(fileName):
 	file = open(fileName)
-	tempList = []
-
 	for line in file:
 		teLine = line.rstrip('\n ').split(' ')
 		nLine = [float(i) for i in teLine]
@@ -30,7 +30,7 @@ def fileHandle(fileName):
 	return
 
 def euclidDist(centroid, dataPt):
-	centroid = np.array(centroid)
+	# centroid = np.array(centroid)
 	dataPt = np.array(dataPt)
 	ldist = centroid-dataPt
 	return np.sum(np.transpose(ldist)*ldist)
@@ -38,7 +38,10 @@ def euclidDist(centroid, dataPt):
 def distArray(dataPt):
 	distVector = np.zeros((numOfClusters))
 	for ind in range(numOfClusters):
-		distVector[ind] = euclidDist(meanVector[ind], dataPt)
+		norm = np.linalg.norm(meanVector[ind] - dataPt)
+		print("Norm: ",norm)
+		distVector[ind] = norm#euclidDist(meanVector[ind], dataPt)
+		# distVector[ind] = euclidDist(meanVector[ind], dataPt)
 	return distVector
 
 #assignment of clusters
@@ -61,7 +64,13 @@ def findMean(component):
 
 def reCalcMean():
 	for i in range(numOfClusters):
-		meanVector[i] =  findMean(clusters[i])
+		meanVector[i] =  np.mean(np.array(clusters[i]))#findMean(clusters[i])
+
+
+def allUnique(x):
+	seen = list()
+	return not any(i in seen or seen.append(i) for i in x)
+
 
 print("Process start")
 for root, dirs, files in os.walk(args["source"]):
@@ -71,11 +80,6 @@ for root, dirs, files in os.walk(args["source"]):
 		fileHandle(path)
 		lengthOfFile.append(len(wholeData)-cnt)
 		cnt = len(wholeData)
-
-
-def allUnique(x):
-	seen = list()
-	return not any(i in seen or seen.append(i) for i in x)
 
 while True:
 	meanVector = random.sample(wholeData, numOfClusters)
@@ -93,13 +97,17 @@ for i in range(numOfClusters):
 	clusters.append([])
 
 meanVector = np.array(meanVector)
-
+# wholeData = np.array(wholeData)
 counter = 0
+loopStarttime = datetime.now()
 while True:
 	J = assignDataPt()
-	print(counter," : J: ", J)
+	print(counter," : J: ", J, "\t : ",(Jprev-J)," : ",(datetime.now()-loopStarttime))
 	counter += 1
 	if Jprev != -1 and Jprev - J < threshold:
 		break
 	Jprev = J
 	reCalcMean()
+	loopStarttime = datetime.now()
+
+print("Total time taken ", (datetime.now()-start_time))
