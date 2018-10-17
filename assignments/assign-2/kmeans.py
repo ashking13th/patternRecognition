@@ -90,7 +90,7 @@ while True:
 
 #Now, k-means clustering
 J = 0.0					#present Cost function
-Jprev = -1.0			#previous Cost function
+Jprev = -1.0				#previous Cost function
 threshold = 1e-3
 
 clusters = []
