@@ -9,7 +9,7 @@ from datetime import datetime
 '''
 start_time = datetime.now()
 
-numOfClusters = 2
+numOfClusters = 3
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
@@ -38,7 +38,7 @@ def distArray(dataPt):
 	distVector = np.zeros((numOfClusters))
 	for ind in range(numOfClusters):
 		norm = np.linalg.norm(meanVector[ind] - dataPt)
-		distVector[ind] = norm #euclidDist(meanVector[ind], dataPt)
+		distVector[ind] = norm**2 #euclidDist(meanVector[ind], dataPt)
 	return distVector
 
 #assignment of clusters
