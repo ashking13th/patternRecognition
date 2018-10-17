@@ -94,7 +94,6 @@ Jprev = -1.0				#previous Cost function
 threshold = 1e-3
 
 clusters = []
-clustersSize = [0]*numOfClusters
 for i in range(numOfClusters):
 	clusters.append([])
 
