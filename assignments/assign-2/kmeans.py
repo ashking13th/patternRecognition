@@ -30,7 +30,6 @@ def fileHandle(fileName):
 	return
 
 def euclidDist(centroid, dataPt):
-	# centroid = np.array(centroid)
 	dataPt = np.array(dataPt)
 	ldist = centroid-dataPt
 	return np.sum(np.transpose(ldist)*ldist)
@@ -39,10 +38,8 @@ def distArray(dataPt):
 	distVector = np.zeros((numOfClusters))
 	for ind in range(numOfClusters):
 		norm = np.linalg.norm(meanVector[ind] - dataPt)
-		# print("Norm: ",norm)
-		distVector[ind] = norm**2#euclidDist(meanVector[ind], dataPt)
-		# distVector[ind] = euclidDist(meanVector[ind], dataPt)
-		# print("Eucl: ", euclidDist(meanVector[ind], dataPt))
+		distVector[ind] = euclidDist(meanVector[ind], dataPt)
+
 	return distVector
 
 #assignment of clusters
@@ -65,7 +62,10 @@ def findMean(component):
 
 def reCalcMean():
 	for i in range(numOfClusters):
-		meanVector[i] =  np.mean(np.array(clusters[i]))#findMean(clusters[i])
+		# print("cluser = ", clusters[i], ": i = ", i)
+		# print("mean by np = ", np.mean(np.array(clusters[i]), axis=0))
+		meanVector[i] = findMean(clusters[i])
+		clusters[i] = []
 
 
 def allUnique(x):
@@ -98,7 +98,9 @@ for i in range(numOfClusters):
 	clusters.append([])
 
 meanVector = np.array(meanVector)
+
 # wholeData = np.array(wholeData)
+
 counter = 0
 loopStarttime = datetime.now()
 while True:
