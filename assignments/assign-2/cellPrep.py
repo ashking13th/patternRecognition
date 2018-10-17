@@ -62,10 +62,10 @@ def processImage(image, featureVectors):
     patch = []
     i = 0
     # print("Height: ",height, "; breadth: ",breadth)
-    for i in range(0, height, 1):
+    for i in range(0, height, 7):
         # print(i,end=' ',flush=True)
         j = 0
-        for j in range(0, breadth, 1):
+        for j in range(0, breadth, 7):
             # print("i: ",i," j: ",j)
             if(height-i > 6 and breadth-j > 6):
                 patch = image[i: (i+7), j: (j+7)]
