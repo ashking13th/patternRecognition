@@ -21,7 +21,7 @@ def updateCovMatK(gammaK, X, meanK, noOfPoints, dimensions):
     for n in range (noOfPoints):
         sigma += gammaK[n]*(X[n]-meanK)*np.transpose(X[n]-meanK)
         gammaSum += gammaK[n]
-    sigma = sigma/gammaSum
+    sigma /=gammaSum
     for i in range(dimensions):
         for j in range(dimensions):
             if i != j:
