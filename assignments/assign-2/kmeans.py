@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os, argparse, math, random
+from sklearn.cluster import KMeans
 from datetime import datetime
 
 ''' 
@@ -89,17 +90,20 @@ while True:
 
 #Now, k-means clustering
 J = 0.0					#present Cost function
-Jprev = -1.0			#previous Cost function
+Jprev = -1.0				#previous Cost function
 threshold = 1e-3
 
 clusters = []
-clustersSize = [0]*numOfClusters
 for i in range(numOfClusters):
 	clusters.append([])
 
 meanVector = np.array(meanVector)
 
-# wholeData = np.array(wholeData)
+wholeData = np.array(wholeData)
+kmeans = KMeans(n_clusters=32, init='random', n_init=10, max_iter=300, tol=0.001, precompute_distances='auto', verbose=0, random_state=None, copy_x=True, n_jobs=None, algorithm='full').fit(wholeData)
+print(kmeans.n_iter_)
+print(kmeans.inertia_)
+
 
 counter = 0
 loopStarttime = datetime.now()
