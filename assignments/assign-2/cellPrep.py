@@ -104,13 +104,13 @@ def process(image, targetPath):
     print("features: ")
     n = 0
     for i in featureVectors:
-        print("No.: ",n,  end=' ', flush=True)
+        # print("No.: ",n,  end=' ', flush=True)
         n += 1
         for j in i:
             outfile.write(str(j)+" ")
-            print(j,  end=' ', flush=True)
+            # print(j,  end=' ', flush=True)
         outfile.write("\n")
-        print("\n")
+        # print("\n")
     outfile.close
     print("YAAAAAAAAAAAAAAAAAY")
     return
