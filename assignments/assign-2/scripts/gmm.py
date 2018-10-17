@@ -20,7 +20,7 @@ def updateCovMatK(gammaK, X, meanK, noOfPoints, dimensions):
     gammaSum = 0
     for n in range (noOfPoints):
         sigma += gammaK[n]*(X[n]-meanK)*np.transpose(X[n]-meanK)
-        gammaSum = gammaK[n]
+        gammaSum += gammaK[n]
     sigma = sigma/gammaSum
     for i in range(dimensions):
         for j in range(dimensions):
@@ -97,5 +97,14 @@ def algorithmEM(threshold, noOfPoints, X, dimensions, clusters, gammaVect, piVec
     lPrev = -1
     lCurrent = 0
 
-    while (lPrev-lCurrent)>threshold:
+    iterationCount = 0
+    while True:
+        print("Iteration No. : ", iterationCount)
+        iterationCount += 1
         gammaVect = updateGammaVect(piVect, noOfPoints,X, covMatVect, meanVect, clusters)
+        meanVect = updateMeanVect(noOfPoints, X, gammaVect, dimensions, clusters)
+        piVect = updatePiVect(noOfPoints, gammaVect, clusters)
+        covMatVect = updateCovMatVector(noOfPoints, X, meanVect, gammaVect, dimensions, clusters)
+
+        if (lPrev-lCurrent) < threshold:
+            break
