@@ -39,9 +39,10 @@ def distArray(dataPt):
 	distVector = np.zeros((numOfClusters))
 	for ind in range(numOfClusters):
 		norm = np.linalg.norm(meanVector[ind] - dataPt)
-		print("Norm: ",norm)
-		distVector[ind] = norm#euclidDist(meanVector[ind], dataPt)
+		# print("Norm: ",norm)
+		distVector[ind] = norm**2#euclidDist(meanVector[ind], dataPt)
 		# distVector[ind] = euclidDist(meanVector[ind], dataPt)
+		# print("Eucl: ", euclidDist(meanVector[ind], dataPt))
 	return distVector
 
 #assignment of clusters
