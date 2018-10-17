@@ -3,11 +3,14 @@ import os
 import matplotlib
 
 
-#   Calcualte gaussian function value for some x,mean and covMat
+#   Calculate gaussian function value for some x, mean and covMat
 def gaussian(covMat, x, mean):
-    gaussian = -(1/2)*(x-mean)*(np.linalg.inv(covMat))*(x-mean)
+    numFeature = np.size(mean,1)
+    gaussian = -(1/2)*((np.transpose(x-mean)*(np.linalg.inv(covMat)))*(x-mean))
     gaussian = np.exp(gaussian)
-    gaussian /= 1/(np.sqrt((2*np.pi)*covMat))
+    deter = np.linalg.det(covMat)
+    gaussian *= deter**(-1./2)
+    gaussian *= (2*np.pi)**(-numFeature/2.)
     return gaussian
 
 
@@ -67,8 +70,8 @@ def updatePiVect(noOfPoints, gammaVect, clusters):
 
 def updateGammaNK(k, piK, x, covMatVect, meanVect, clusters):
     gamma = 0
-    for ik in range(clusters):
-        gaussian(covMatVect[ik], x, meanVect[ik])
+    for ind in range(clusters):
+        gaussian(covMatVect[ind], x, meanVect[ind])
     gamma /= gaussian(covMatVect[k], x, meanVect[k])
     return gamma
 
@@ -83,9 +86,6 @@ def updateGammaVect(piVect, noOfPoints, X, covMatVect, meanVect, clusters):
         gammaVect.append(gammaRow)
     return gammaVect
 
-def updateParameterVectors():
-    pass
-
 def logLikelihood(noOfPoints, clusters, piVect, X, meanVect, covMatVect):
     l = 0
     for n in range(noOfPoints):
@@ -94,9 +94,8 @@ def logLikelihood(noOfPoints, clusters, piVect, X, meanVect, covMatVect):
     return np.log(l)
 
 def algorithmEM(threshold, noOfPoints, X, dimensions, clusters, gammaVect, piVect, covMatVect, meanVect):
-    lPrev = 100
+    lPrev = -1
     lCurrent = 0
 
     while (lPrev-lCurrent)>threshold:
         gammaVect = updateGammaVect(piVect, noOfPoints,X, covMatVect, meanVect, clusters)
-        
