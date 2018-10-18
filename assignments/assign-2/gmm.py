@@ -2,7 +2,9 @@ import numpy as np
 import os
 import matplotlib
 from random import randint
+from datetime import datetime
 
+start_time = datetime.now()
 X = []
 meanVect = np.zeros(2)
 gammaVect = np.zeros(shape=(2,2))
@@ -28,7 +30,6 @@ def gaussian(covMat, x, mean):
 def updateCovMatVector():
     # covMatVect = []
     for k in range(clusters):
-        # covMatVect.append(updateCovMatK(gammaVect[k], X, meanVect[k], noOfPoints, dimensions))
         sigma = np.zeros(shape=(dimensions, dimensions))
         gammaSum = 0
         for n in range(noOfPoints):
@@ -45,7 +46,6 @@ def updateCovMatVector():
 def updateMeanVect():
     # meanVect = []
     for k in range(clusters):
-        # meanVect.append(updateMeanK(gammaVect[k], X, noOfPoints, dimensions))
         mean = np.zeros(shape=(dimensions))
         gammaSum = 0
         for n in range(noOfPoints):
@@ -58,7 +58,6 @@ def updateMeanVect():
 def updatePiVect():
     # piVect = []
     for k in range(clusters):
-        # piVect.append(updatePiK(gammaVect[k], noOfPoints))
         piK = 0
         for n in range(noOfPoints):
             piK += gammaVect[k,n]
@@ -67,12 +66,8 @@ def updatePiVect():
 
 
 def updateGammaVect():
-    # gammaVect = []
     for k in range(clusters):
-        # gammaRow = []
         for n in range(noOfPoints):
-        #     gammaRow.append(updateGammaNK(k, piVect[k], X[n], covMatVect[k], meanVect[k], clusters))
-        # gammaVect.append(gammaRow)
             gamma = 0
             for ind in range(clusters):
                 gamma += piVect[k]*gaussian(covMatVect[ind], X[n], meanVect[ind])
@@ -80,22 +75,25 @@ def updateGammaVect():
         gammaVect[k,n] = gamma
 
 def logLikelihood():
-    l = 0
+    likelihood = 0
     for n in range(noOfPoints):
+        l = 0
         for k in range(clusters):
             l += piVect[k]*gaussian(covMatVect[k], X[n], meanVect[k])
-    return np.log(l)
+        likelihood += np.log(l)
+    return likelihood
 
 def algorithmEM():
-    # global X;global meanVect;global gammaVect;global piVect;global covMatVect
-    # global dimensions;global clusters;global threshold;global noOfPoints
-    
+    print("GMM Start")
     lPrev = 0
     lCurrent = -1
 
     iterationCount = 0
+    loopTime = datetime.now()
     while True:
-        print("Iteration No. : ", iterationCount)
+        print("Iteration No. : ", iterationCount," ; Time: ")
+        print(lCurrent)
+
         iterationCount += 1
         updateGammaVect()
         updateMeanVect()
@@ -118,7 +116,7 @@ def initialize():
     updateCovMatVector()
 
 
-def master(threshold, noOfPoints, X, dimensions, clusters, covMatVect, meanVect):
+def master(threshold, noOfPoints, X, dimensions, clusters, meanVect):
     globals()['threshold'] = threshold
     globals()['noOfPoints'] = noOfPoints
     globals()['X'] = X
@@ -128,3 +126,5 @@ def master(threshold, noOfPoints, X, dimensions, clusters, covMatVect, meanVect)
 
     globals()['gammaVect'] = np.zeros(shape=(clusters, noOfPoints))
     globals()['piVect'] = np.zeros(clusters)
+    initialize()
+    algorithmEM()

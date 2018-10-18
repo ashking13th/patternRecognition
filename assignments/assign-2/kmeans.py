@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import os, argparse, math, random
 from datetime import datetime
 from sklearn.cluster import KMeans
+import gmm
 
 ''' 
 	Select k distinct random vectors from the features dataset for each (class(combining all images data))
@@ -139,3 +140,5 @@ for i, lenFile in enumerate(lengthOfFile):
 print(BOVW)
 # print("Final mean Vector = ", meanVector)
 # print("Cluster centers = ", kmeans.cluster_centers_)
+
+gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), clusters, meanVector)
