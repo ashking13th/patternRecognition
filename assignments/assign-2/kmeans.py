@@ -98,7 +98,7 @@ def initMean():
 	global meanVector
 	temp = random.sample(range(len(wholeData)-1), numOfClusters)
 	for assign in temp:
-		meanVector.append(assign)
+		meanVector.append(wholeData[assign])
 	meanVector = np.array(meanVector)
 
 #Now, k-means clustering
