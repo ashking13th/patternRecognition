@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import os, argparse, math, random
 from datetime import datetime
 from sklearn.cluster import KMeans
+from sklearn.mixture import GaussianMixture as gm
 import gmm
 
 ''' 
@@ -42,7 +43,7 @@ def euclidDist(centroid, dataPt):
 
 #calculating distance matrix for a point
 def distArray(dataPt):
-	distVector = np.zeros((numOfClusters))
+	distVector = np.zeros((numOfClusters), dtype=np.float64)
 	for ind in range(numOfClusters):
 		distVector[ind] = euclidDist(meanVector[ind], dataPt)
 	return distVector
@@ -86,14 +87,14 @@ for root, dirs, files in os.walk(args["source"]):
 
 wholeData = np.array(wholeData)
 meanVector = []
-clusters = np.zeros((numOfClusters, np.size(wholeData, axis=1)))
+clusters = np.zeros((numOfClusters, np.size(wholeData, axis=1)),dtype=np.float64)
 
 def initMean():
 	global meanVector
 	temp = random.sample(range(len(wholeData)-1), numOfClusters)
 	for assign in temp:
 		meanVector.append(wholeData[assign])
-	meanVector = np.array(meanVector)
+	meanVector = np.array(meanVector, dtype=np.float64)
 
 #Now, k-means clustering
 J = 0.0					#present Cost function
@@ -142,4 +143,8 @@ print(BOVW)
 print("Final mean Vector = ", meanVector)
 # print("Cluster centers = ", kmeans.cluster_centers_)
 
-gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster)
+# print("Initializer: ",pointsAssignCluster)
+
+ans = gm(n_components=2, covariance_type='full', tol=0.001, reg_covar=0, max_iter=100, n_init=1, init_params='kmeans', weights_init=None, means_init=None, precisions_init=None, random_state=None, warm_start=False, verbose=0, verbose_interval=10).fit(wholeData)
+print(ans.means_)
+# gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster)
