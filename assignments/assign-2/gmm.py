@@ -79,7 +79,7 @@ def updateGammaVect():
             gamma /= gaussian(covMatVect[k], X[n], meanVect[k])
         gammaVect[k,n] = gamma
 
-def logLikelihood(noOfPoints, clusters, piVect, X, meanVect, covMatVect):
+def logLikelihood():
     l = 0
     for n in range(noOfPoints):
         for k in range(clusters):
@@ -90,8 +90,8 @@ def algorithmEM():
     # global X;global meanVect;global gammaVect;global piVect;global covMatVect
     # global dimensions;global clusters;global threshold;global noOfPoints
     
-    lPrev = -1
-    lCurrent = 0
+    lPrev = 0
+    lCurrent = -1
 
     iterationCount = 0
     while True:
@@ -102,7 +102,10 @@ def algorithmEM():
         updatePiVect()
         updateCovMatVector()
 
-        if (lPrev-lCurrent) < threshold:
+        lPrev = lCurrent
+        lCurrent = logLikelihood()
+
+        if lPrev != -1 and (lPrev-lCurrent) < threshold:
             break
 
 def initialize():
