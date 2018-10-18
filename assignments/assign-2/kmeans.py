@@ -10,7 +10,7 @@ from sklearn.cluster import KMeans
 '''
 start_time = datetime.now()
 
-numOfClusters = 2
+numOfClusters = 32
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
