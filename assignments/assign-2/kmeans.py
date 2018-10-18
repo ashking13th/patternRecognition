@@ -11,6 +11,8 @@ from sklearn.cluster import KMeans
 start_time = datetime.now()
 
 numOfClusters = 32
+dimension = 2
+
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
@@ -105,7 +107,7 @@ def initMean():
 J = 0.0					#present Cost function
 Jprev = -1.0			#previous Cost function
 threshold = 1e-3
-
+dimension = np.size(wholeData[0],axis=1)
 clusters = []
 for i in range(numOfClusters):
 	clusters.append([])
@@ -123,7 +125,7 @@ while True:
 	a = datetime.now()
 	J = assignDataPt()
 	# print(counter," : J: ", J, "\t : ",(Jprev-J)," : ",(datetime.now()-loopStarttime))
-	print(counter, " : Cost = ", (Jprev-J))
+	print(counter, " : Cost = ", (Jprev-J),end = "\t : ")
 	counter += 1
 	if Jprev != -1 and Jprev - J < threshold:
 		break
@@ -131,3 +133,6 @@ while True:
 	reCalcMean()
 	b = datetime.now()
 	print(b-a)
+print(meanVector)
+print("Total time: ", (datetime.now()-start_time))
+print("total cost : ", J)
