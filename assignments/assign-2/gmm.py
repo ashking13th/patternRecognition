@@ -39,7 +39,7 @@ def updateCovMatVector():
         for i in range(dimensions):
             for j in range(dimensions):
                 if i != j:
-                    sigma[i][j] = 0
+                    sigma[i,j] = 0
     covMatVect[k] = sigma
 
 
@@ -92,7 +92,7 @@ def algorithmEM():
     loopTime = datetime.now()
     while True:
         print("Iteration No. : ", iterationCount," ; Time: ")
-        print(lCurrent)
+        print(lCurrent, "\t diff: \t",(lPrev-lCurrent))
 
         iterationCount += 1
         updateGammaVect()
@@ -117,12 +117,18 @@ def initialize():
 
 
 def master(threshold, noOfPoints, X, dimensions, clusters, meanVect):
+    print("In gmm ")
     globals()['threshold'] = threshold
     globals()['noOfPoints'] = noOfPoints
     globals()['X'] = X
     globals()['dimensions'] = dimensions
     globals()['clusters'] = clusters
     globals()['meanVect'] = meanVect
+
+    print("Threshold: ", threshold)
+    print("Clusters: ", clusters)
+    print("Dimensions: ", dimensions)
+    print("Mean vector: ",meanVect)
 
     globals()['gammaVect'] = np.zeros(shape=(clusters, noOfPoints))
     globals()['piVect'] = np.zeros(clusters)

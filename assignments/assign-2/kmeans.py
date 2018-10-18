@@ -11,7 +11,7 @@ import gmm
 '''
 start_time = datetime.now()
 
-numOfClusters = 32
+numOfClusters = 2
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
@@ -137,8 +137,9 @@ for i, lenFile in enumerate(lengthOfFile):
 	 	BOVW[i, int(j)] += 1 
 	cnt += lenFile
 
+print("Bag of visual words")
 print(BOVW)
-# print("Final mean Vector = ", meanVector)
+print("Final mean Vector = ", meanVector)
 # print("Cluster centers = ", kmeans.cluster_centers_)
 
 gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), clusters, meanVector)
