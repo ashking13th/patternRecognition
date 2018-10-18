@@ -142,4 +142,4 @@ print(BOVW)
 print("Final mean Vector = ", meanVector)
 # print("Cluster centers = ", kmeans.cluster_centers_)
 
-gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector)
+gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster)

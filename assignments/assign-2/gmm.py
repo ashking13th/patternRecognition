@@ -11,13 +11,14 @@ gammaVect = np.zeros(shape=(2,2))
 piVect = np.zeros(2)
 covMatVect = []
 dimensions = 2
-clusters = 2
+noOfClusters = 2
 threshold = 0.001
 noOfPoints = 0
 
 #   Calculate gaussian function value for some x, mean and covMat
 def gaussian(covMat, x, mean):
-    numFeature = np.size(mean,1)
+    # print(mean)
+    numFeature = np.size(mean)
     gaussian = -(1/2)*((np.transpose(x-mean)*(np.linalg.inv(covMat)))*(x-mean))
     gaussian = np.exp(gaussian)
     deter = np.linalg.det(covMat)
@@ -29,23 +30,23 @@ def gaussian(covMat, x, mean):
 #   Updating the entire covariance matrix vector using updateCovMatK() on K elements
 def updateCovMatVector():
     # covMatVect = []
-    for k in range(clusters):
+    for k in range(noOfClusters):
         sigma = np.zeros(shape=(dimensions, dimensions))
         gammaSum = 0
         for n in range(noOfPoints):
-            sigma += gammaVect[k,n]*(X[n]-meanVect[k])*np.transpose(X[n]-meanVect[k])
+            sigma += gammaVect[k,n]*np.sum((X[n]-meanVect[k])*np.transpose(X[n]-meanVect[k]))
             gammaSum += gammaVect[k,n]
         sigma /= gammaSum
         for i in range(dimensions):
             for j in range(dimensions):
                 if i != j:
                     sigma[i,j] = 0
-    covMatVect[k] = sigma
+        covMatVect[k] = sigma
 
 
 def updateMeanVect():
     # meanVect = []
-    for k in range(clusters):
+    for k in range(noOfClusters):
         mean = np.zeros(shape=(dimensions))
         gammaSum = 0
         for n in range(noOfPoints):
@@ -57,7 +58,7 @@ def updateMeanVect():
 
 def updatePiVect():
     # piVect = []
-    for k in range(clusters):
+    for k in range(noOfClusters):
         piK = 0
         for n in range(noOfPoints):
             piK += gammaVect[k,n]
@@ -66,10 +67,10 @@ def updatePiVect():
 
 
 def updateGammaVect():
-    for k in range(clusters):
+    for k in range(noOfClusters):
         for n in range(noOfPoints):
             gamma = 0
-            for ind in range(clusters):
+            for ind in range(noOfClusters):
                 gamma += piVect[k]*gaussian(covMatVect[ind], X[n], meanVect[ind])
             gamma /= gaussian(covMatVect[k], X[n], meanVect[k])
         gammaVect[k,n] = gamma
@@ -78,7 +79,7 @@ def logLikelihood():
     likelihood = 0
     for n in range(noOfPoints):
         l = 0
-        for k in range(clusters):
+        for k in range(noOfClusters):
             l += piVect[k]*gaussian(covMatVect[k], X[n], meanVect[k])
         likelihood += np.log(l)
     return likelihood
@@ -106,31 +107,41 @@ def algorithmEM():
         if lPrev != -1 and (lPrev-lCurrent) < threshold:
             break
 
-def initialize():
-    for k in range(clusters):
-        piVect[k] = 1/clusters
-    
+def initialize(pointsAssignCluster):
+    global piVect
+    print("Initializing ")
+
+    print("Initializing gamma")
     for n in range(noOfPoints):
-        gammaVect[randint(0,clusters-1),n] = 1
+        gammaVect[pointsAssignCluster[n],n] = 1
+        piVect[pointsAssignCluster[n]] += 1
+
+    print("Initializing Pi Vector")
+    piVect /= noOfPoints
+  
+    print("updating cov mat")
+    for i in range(noOfClusters):
+        covMatVect.append(0)
 
     updateCovMatVector()
+    print("updated cov mat")
 
 
-def master(threshold, noOfPoints, X, dimensions, clusters, meanVect):
+def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsAssignCluster):
     print("In gmm ")
     globals()['threshold'] = threshold
     globals()['noOfPoints'] = noOfPoints
     globals()['X'] = X
     globals()['dimensions'] = dimensions
-    globals()['clusters'] = clusters
+    globals()['noOfClusters'] = noOfClusters
     globals()['meanVect'] = meanVect
 
     print("Threshold: ", threshold)
-    print("Clusters: ", clusters)
+    print("Clusters: ", noOfClusters)
     print("Dimensions: ", dimensions)
     print("Mean vector: ",meanVect)
 
-    globals()['gammaVect'] = np.zeros(shape=(clusters, noOfPoints))
-    globals()['piVect'] = np.zeros(clusters)
-    initialize()
+    globals()['gammaVect'] = np.zeros(shape=(noOfClusters, noOfPoints))
+    globals()['piVect'] = np.zeros(noOfClusters)
+    initialize(pointsAssignCluster)
     algorithmEM()
