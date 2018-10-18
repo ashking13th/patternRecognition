@@ -10,7 +10,7 @@ from datetime import datetime
 '''
 start_time = datetime.now()
 
-numOfClusters = 3
+numOfClusters = 32	
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
@@ -100,14 +100,15 @@ for i in range(numOfClusters):
 meanVector = np.array(meanVector)
 
 wholeData = np.array(wholeData)
-kmeans = KMeans(n_clusters=32, init='random', n_init=10, max_iter=300, tol=0.001, precompute_distances='auto', verbose=0, random_state=None, copy_x=True, n_jobs=None, algorithm='full').fit(wholeData)
-print(kmeans.n_iter_)
-print(kmeans.inertia_)
+# kmeans = KMeans(n_clusters=32, init='random', n_init=10, max_iter=300, tol=0.001, precompute_distances='auto', verbose=0, random_state=None, copy_x=True, n_jobs=None, algorithm='full').fit(wholeData)
+# print(kmeans.n_iter_)
+# print(kmeans.inertia_)
 
 
 counter = 0
 loopStarttime = datetime.now()
 while True:
+	print(meanVector)
 	J = assignDataPt()
 	print(counter," : J: ", J, "\t : ",(Jprev-J)," : ",(datetime.now()-loopStarttime))
 	counter += 1
