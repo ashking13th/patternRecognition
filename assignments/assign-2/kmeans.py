@@ -100,17 +100,10 @@ def initMean():
 J = 0.0					#present Cost function
 Jprev = -1.0			#previous Cost function
 threshold = 1e-3
-<<<<<<< HEAD
-dimension = np.size(wholeData[0],axis=1)
-clusters = []
-for i in range(numOfClusters):
-	clusters.append([])
-=======
 
 # kmeans = KMeans(n_clusters=numOfClusters, init='random', n_init=10, max_iter=300, tol=0.001, precompute_distances='auto', verbose=0, random_state=None, copy_x=True, n_jobs=None, algorithm='full').fit(wholeData)
 # print("number of iterations = ", kmeans.n_iter_)
 # print("cost of tour = ", kmeans.inertia_)
->>>>>>> 877cbc0059481a90b02f1abca1657d978e43c969
 
 
 
@@ -132,6 +125,7 @@ while True:
 	reCalcMean()
 	b = datetime.now()
 	print(b-a)
+	
 print(meanVector)
 print("Total time: ", (datetime.now()-start_time))
 print("total cost : ", J)
