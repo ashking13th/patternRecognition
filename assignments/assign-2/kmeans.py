@@ -10,9 +10,7 @@ from sklearn.cluster import KMeans
 '''
 start_time = datetime.now()
 
-numOfClusters = 32
-dimension = 2
-
+numOfClusters = 2
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
@@ -116,7 +114,8 @@ while True:
 	a = datetime.now()
 	J = assignDataPt()
 	# print(counter," : J: ", J, "\t : ",(Jprev-J)," : ",(datetime.now()-loopStarttime))
-	print(counter, " : Cost = ", (Jprev-J),end = "\t : ")
+	# meanVector, " : ", 
+	print(counter, " : Cost = ", (Jprev-J))
 	counter += 1
 	if Jprev != -1 and Jprev - J < threshold:
 		reCalcMean()
@@ -125,7 +124,18 @@ while True:
 	reCalcMean()
 	b = datetime.now()
 	print(b-a)
-	
-print(meanVector)
-print("Total time: ", (datetime.now()-start_time))
-print("total cost : ", J)
+
+
+lengthOfFile = np.array(lengthOfFile)
+BOVW = np.zeros((len(lengthOfFile), numOfClusters))
+
+cnt = 0
+for i, lenFile in enumerate(lengthOfFile):
+	for ind in range(lenFile):
+	 	j = pointsAssignCluster[cnt + ind]
+	 	BOVW[i, int(j)] += 1 
+	cnt += lenFile
+
+print(BOVW)
+# print("Final mean Vector = ", meanVector)
+# print("Cluster centers = ", kmeans.cluster_centers_)
