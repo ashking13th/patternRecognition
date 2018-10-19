@@ -22,6 +22,29 @@ def gaussian(covMat, x, mean):
     gaussian *= (2*np.pi)**(-numFeature/2.)
     return gaussian
 
+def rpa(matr):
+	trueclass=np.zeros(nClass)
+	predictedclass=np.zeros(nClass)
+	correctpredicted=np.zeros(nClass)
+	totalexample=0;
+	for i in range(nClass):
+		for j in range(nClass):
+			trueclass[i]+=matr[i][j]
+			predictedclass[i]+=matr[j][i]
+			totalexample+=matr[i][j]
+			if i==j:
+				correctpredicted[i]=matr[i][j];
+	accuracy=np.sum(correctpredicted)/totalexample;
+	recall=correctpredicted/trueclass;
+	precision=correctpredicted/predictedclass;
+	print('Accuracy = ',accuracy)
+	print('Recall = ')
+	for i in recall:
+		print(i)
+	print('Precision = ')
+	for i in precision:
+		print(i)
+
 for root, dirs, files in os.walk(args["source"]):
 	for f in files:
 		path = os.path.relpath(os.path.join(root, f), ".")
@@ -42,4 +65,4 @@ for ind in len(inpData):
 		likelihood[numC] = pik[numC] * gaussian(covMatVect[numC], inpData[ind], meanVect[numC])
 	ptsAssign[np.argmin(likelihood)] += 1
 
- 
+rpa(ptsAssign)
