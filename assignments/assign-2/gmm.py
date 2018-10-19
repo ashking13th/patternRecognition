@@ -83,14 +83,13 @@ def updatePiVect():
 
 def updateGammaVect():
     # print("Pi Vector: ",piVect)
-    for k in range(noOfClusters):
-        for n in range(noOfPoints):
-            gamma = 0
-            for ind in range(noOfClusters):
-                gamma += piVect[ind]*gaussian(covMatVect[ind], X[n], meanVect[ind])
-            gamma = (piVect[k]*gaussian(covMatVect[k], X[n], meanVect[k]))/gamma
-        # print("gamma1: ",gamma)
-            gammaVect[k,n] = gamma
+    for n in range(noOfPoints):
+        gamma = 0
+        for ind in range(noOfClusters):
+            gamma += piVect[ind]*gaussian(covMatVect[ind], X[n], meanVect[ind])
+
+        for k in range(noOfClusters):
+            gammaVect[k, n] = (piVect[k]*gaussian(covMatVect[k], X[n], meanVect[k]))/gamma
 
 def logLikelihood():
     likelihood = 0
