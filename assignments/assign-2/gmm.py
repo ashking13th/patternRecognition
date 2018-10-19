@@ -32,19 +32,31 @@ def gaussian(covMat, x, mean):
 
 #   Updating the entire covariance matrix vector using updateCovMatK() on K elements
 def updateCovMatVector():
-    # covMatVect = []
     for k in range(noOfClusters):
-        sigma = np.zeros(shape=(dimensions, dimensions), dtype=np.float64)
+        sigma = np.zeros(shape=(dimensions, dimensions))
         gammaSum = 0
         for n in range(noOfPoints):
-            sigma += gammaVect[k,n]*np.sum((X[n]-meanVect[k])*np.transpose(X[n]-meanVect[k]))
+            deviation = np.copy(X[n]-meanVect[k])
+            # print("INital dev = ", deviation)
+            deviation = deviation.reshape(dimensions, 1)
+            deviation = np.matmul(deviation, np.transpose(deviation))
+
+            # print("deviation = ", deviation)
+            # print("gamma = ", gammaVect[k, n])
+            sigma = sigma + (gammaVect[k, n] * deviation)
+
+            # print("sigma = ", sigma)
             gammaSum += gammaVect[k,n]
+
         sigma /= gammaSum
         for i in range(dimensions):
             for j in range(dimensions):
                 if i != j:
                     sigma[i,j] = 0
+                elif sigma[i, j] == 0:
+                    sigma[i, j] += 1e-6
         covMatVect[k] = sigma
+        # print("covMAt = ", covMatVect[k])
 
 
 def updateMeanVect():
