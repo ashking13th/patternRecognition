@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import argparse
+from PIL import image
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()

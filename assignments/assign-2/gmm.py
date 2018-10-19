@@ -112,13 +112,9 @@ def algorithmEM():
 
         iterationCount += 1
         updateGammaVect()
-        # print("Time gamma: ",(datetime.now()-loopTime))
         updateMeanVect()
-        # print("Time mean: ", (datetime.now()-loopTime))
         updatePiVect()
-        # print("Time pi: ",(datetime.now()-loopTime))
         updateCovMatVector()
-        # print("Time cov: ", (datetime.now()-loopTime))
 
         lPrev = lCurrent
         lCurrent = logLikelihood()
