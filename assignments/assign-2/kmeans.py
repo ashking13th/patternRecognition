@@ -5,6 +5,7 @@ from datetime import datetime
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture as gm
 import gmm
+import gmm2
 import grapher as gp
 import errno
 
@@ -176,4 +177,4 @@ outfile.close()
 
 # ans = gm(n_components=2, covariance_type='full', tol=0.001, reg_covar=0.000006, max_iter=100, n_init=1, init_params='kmeans', weights_init=None, means_init=None, precisions_init=None, random_state=None, warm_start=False, verbose=0, verbose_interval=10).fit(wholeData)
 # print("SKLEARN: \n",ans.means_)
-# gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster, args['output'])
+gmm2.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster, args['output'])

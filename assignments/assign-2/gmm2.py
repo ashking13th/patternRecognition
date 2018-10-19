@@ -167,7 +167,7 @@ def assignCluster():
     return clusterAssignment
 
 
-def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsAssignCluster):
+def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsAssignCluster,outputName):
     # print("In gmm ")
     globals()['threshold'] = threshold
     globals()['noOfPoints'] = noOfPoints
@@ -186,3 +186,22 @@ def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsA
     initialize(pointsAssignCluster)
     algorithmEM()
     print(meanVect)
+
+    targetPath = outputName+".gmm"
+    if not os.path.exists(os.path.dirname(outputName)):
+            try:
+                os.makedirs(os.path.dirname(outputName))
+            except OSError as exc:  # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
+    try:
+        print("target File: ", targetPath)
+        outfile = open(targetPath, "w")
+    except IOError:
+        print("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")
+
+    for mean in meanVect:
+        for feature in mean:
+            outfile.write(str(feature)+" ")
+        outfile.write("\n")
+    outfile.close()
