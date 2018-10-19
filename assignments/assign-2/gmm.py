@@ -3,6 +3,7 @@ import os
 import matplotlib
 from random import randint
 from datetime import datetime
+import grapher as gp
 
 start_time = datetime.now()
 X = []
@@ -98,38 +99,38 @@ def algorithmEM():
 
         iterationCount += 1
         updateGammaVect()
-        print("Time gamma: ",(datetime.now()-loopTime))
+        # print("Time gamma: ",(datetime.now()-loopTime))
         updateMeanVect()
-        print("Time mean: ", (datetime.now()-loopTime))
+        # print("Time mean: ", (datetime.now()-loopTime))
         updatePiVect()
-        print("Time pi: ",(datetime.now()-loopTime))
+        # print("Time pi: ",(datetime.now()-loopTime))
         updateCovMatVector()
-        print("Time cov: ", (datetime.now()-loopTime))
+        # print("Time cov: ", (datetime.now()-loopTime))
 
         lPrev = lCurrent
         lCurrent = logLikelihood()
-        print("Iteration No. : ", iterationCount," ; Time: ", (datetime.now()-loopTime))
+        # print("Iteration No. : ", iterationCount," ; Time: ", (datetime.now()-loopTime))
         loopTime = datetime.now()
         print(lCurrent, "\t diff: \t",(lPrev-lCurrent))
-
+        gp.plotClustersAndMean(X, noOfClusters, assignCluster(), meanVect, "GMM",True)
         if lPrev != -1 and (lPrev-lCurrent) < threshold:
             break
 
 def initialize(pointsAssignCluster):
     global piVect
     global gammaVect
-    print("Initializing ")
+    # print("Initializing ")
 
-    print("Initializing gamma")
+    # print("Initializing gamma")
     for n in range(noOfPoints):
         # print("Assign pt: ",pointsAssignCluster[n])
         gammaVect[int(pointsAssignCluster[n]),n] = 1
         piVect[int(pointsAssignCluster[n])] += 1
 
-    print("Initializing Pi Vector")
+    # print("Initializing Pi Vector")
     piVect /= noOfPoints
   
-    print("updating cov mat")
+    # print("updating cov mat")
     for i in range(noOfClusters):
         covMatVect.append(0)
 
@@ -138,11 +139,17 @@ def initialize(pointsAssignCluster):
         for j in range(dimensions):
             covMatVect[i][j][j]
     # print(covMatVect)
-    print("updated cov mat")
+    # print("updated cov mat")
+
+def assignCluster():
+    clusterAssignment = []
+    for i in range(noOfPoints):
+        clusterAssignment.append(np.argmax(gammaVect[:,i]))
+    return clusterAssignment
 
 
 def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsAssignCluster):
-    print("In gmm ")
+    # print("In gmm ")
     globals()['threshold'] = threshold
     globals()['noOfPoints'] = noOfPoints
     globals()['X'] = X
@@ -156,7 +163,11 @@ def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsA
     # print("Mean vector: ",meanVect)
 
     globals()['gammaVect'] = np.zeros(shape=(noOfClusters, noOfPoints),dtype=np.float64)
-    print("Cat")
+    # print("Cat")
     globals()['piVect'] = np.zeros(noOfClusters, dtype=np.float64)
     initialize(pointsAssignCluster)
     algorithmEM()
+    print(meanVect)
+
+    # gp.plotClustersAndMean(X, noOfClusters, assignCluster(), meanVect, "GMM",True)
+

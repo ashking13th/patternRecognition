@@ -5,6 +5,7 @@ from datetime import datetime
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture as gm
 import gmm
+import grapher as gp
 
 ''' 
 	Select k distinct random vectors from the features dataset for each (class(combining all images data))
@@ -12,7 +13,7 @@ import gmm
 '''
 start_time = datetime.now()
 
-numOfClusters = 2
+numOfClusters = 3
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
@@ -96,6 +97,7 @@ def initMean():
 		meanVector.append(wholeData[assign])
 	meanVector = np.array(meanVector, dtype=np.float64)
 
+	
 #Now, k-means clustering
 J = 0.0					#present Cost function
 Jprev = -1.0			#previous Cost function
@@ -119,6 +121,8 @@ while True:
 	# meanVector, " : ", 
 	print(counter, " : Cost = ", (Jprev-J))
 	counter += 1
+	if len(wholeData[0]) < 3:
+		gp.plotClustersAndMean(wholeData, numOfClusters, pointsAssignCluster, meanVector,"K-Means")
 	if Jprev != -1 and Jprev - J < threshold:
 		reCalcMean()
 		break
@@ -139,12 +143,15 @@ for i, lenFile in enumerate(lengthOfFile):
 	cnt += lenFile
 
 print("Bag of visual words")
-print(BOVW)
+if numOfClusters> 3:
+	print(BOVW)
 print("Final mean Vector = ", meanVector)
+# if len(wholeData[0]) < 3:
+# 	gp.plotClustersAndMean(wholeData, numOfClusters, pointsAssignCluster, meanVector)
 # print("Cluster centers = ", kmeans.cluster_centers_)
 
 # print("Initializer: ",pointsAssignCluster)
 
-ans = gm(n_components=2, covariance_type='full', tol=0.001, reg_covar=0, max_iter=100, n_init=1, init_params='kmeans', weights_init=None, means_init=None, precisions_init=None, random_state=None, warm_start=False, verbose=0, verbose_interval=10).fit(wholeData)
-print(ans.means_)
-# gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster)
+# ans = gm(n_components=2, covariance_type='full', tol=0.001, reg_covar=0.000006, max_iter=100, n_init=1, init_params='kmeans', weights_init=None, means_init=None, precisions_init=None, random_state=None, warm_start=False, verbose=0, verbose_interval=10).fit(wholeData)
+# print("SKLEARN: \n",ans.means_)
+gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster)
