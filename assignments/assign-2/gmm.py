@@ -186,7 +186,7 @@ def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsA
 
     for mean in meanVect:
         for feature in mean:
-            outfile.write(feature+" ")
+            outfile.write(str(feature)+" ")
         outfile.write("\n")
     outfile.close()
 

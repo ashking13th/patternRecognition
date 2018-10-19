@@ -164,7 +164,7 @@ except IOError:
 
 for mean in meanVector:
 	for feature in mean:
-		outfile.write(feature+" ")
+		outfile.write(str(feature)+" ")
 	outfile.write("\n")
 outfile.close()
 
