@@ -54,3 +54,7 @@ def process(image, features):
     plt.imshow(overlay, 'jet', interpolation='none', alpha=0.7)
     plt.show()
 
+
+def cellSegmentaion(height, breadth, clusterAssignments):
+    pass
+
