@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import argparse
-from PIL import image
+from PIL import Image
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
@@ -12,9 +12,18 @@ args = vars(ap.parse_args())
 
 
 segmentColors = [[0,0,255],[0,255,0],[255,0,0]]
+colors = [(0, 0, 255), (0, 255, 0), (255, 0, 0)]
 
-def allotSegment(patchFeatures):
-    return 1
+def allotCluster(patchFeatures, meanVector):
+    allotment = []
+    clusters = len(meanVector)
+
+    for patch in patchFeatures:
+        dist = []
+        for mean in meanVector:
+            dist.append(np.linalg.norm(patch-mean, axis=1)**2)
+        allotment.append(np.argmin(dist))
+    return allotment
 
 
 def createOverlay(height, breadth, allotment):
@@ -28,7 +37,7 @@ def createOverlay(height, breadth, allotment):
     return overlay
 
 
-def process(image, features):
+def process(image, features, meanVector):
     height = len(image)
     breadth = len(image[0])
 
@@ -40,7 +49,7 @@ def process(image, features):
         # print(i,end=' ',flush=True)
         row = []
         for j in range(0, breadth, 7):
-            segment = allotSegment(features[patchCount])
+            segment = allotCluster(features[patchCount], meanVector)
             row.append(segment)
             patchCount += 1
         allotment.append(row)
@@ -56,6 +65,32 @@ def process(image, features):
     plt.show()
 
 
-def cellSegmentaion(height, breadth, clusterAssignments):
-    pass
+def cellSegmentaion(height, breadth, allotment, targetPath):
+    img = Image.new('RGB', (512,512), color=(0,0,255)).load()
+    
+    for i in range(height):
+        for j in range(breadth):
+            img[j,i] = colors[allotment[int(i/7), int(j/7)]]
 
+    img.show()
+    img.save(targetPath+".jpg")
+
+def segment(features, targetPath, filename, meanVector):
+    height = 512
+    breadth = 512
+
+    allotment = []
+    patchCount = 0
+
+    # print("Height: ",height, "; breadth: ",breadth)
+    for i in range(0, height, 7):
+        # print(i,end=' ',flush=True)
+        row = []
+        for j in range(0, breadth, 7):
+            segment = allotCluster(features[patchCount], meanVector)
+            row.append(segment)
+            patchCount += 1
+        allotment.append(row)
+
+    cellSegmentaion(height, breadth, allotment, targetPath)
+    return

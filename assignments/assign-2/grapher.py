@@ -11,7 +11,7 @@ def plotHistogram(values, bins, type, name):
     plt.show()
 
 
-def plotClustersAndMean(wholeData, numOfClusters, pointsAssignCluster, meanVector, plotName="My beautiful  Cat",flag=False):
+def plotClustersAndMean(outputPath, wholeData, numOfClusters, pointsAssignCluster, meanVector, plotName="My beautiful  Cat",flag=False):
     xFeature = []
     yFeature = []
 
@@ -38,6 +38,7 @@ def plotClustersAndMean(wholeData, numOfClusters, pointsAssignCluster, meanVecto
         plt.scatter([meanVector[k, 0]], [meanVector[k, 1]], marker='*')
         plt.title(plotName)
     plt.draw()
+    # plt.savefig(outputPath+".jpg")
     plt.pause(0.5)
     plt.clf()
     return

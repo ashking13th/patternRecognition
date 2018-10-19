@@ -124,7 +124,7 @@ while True:
 	print(counter, " : Cost = ", (Jprev-J))
 	counter += 1
 	if len(wholeData[0]) < 3:
-		gp.plotClustersAndMean(wholeData, numOfClusters, pointsAssignCluster, meanVector,"K-Means")
+		gp.plotClustersAndMean(args['output']+"counter",wholeData, numOfClusters, pointsAssignCluster, meanVector,"K-Means")
 	if Jprev != -1 and Jprev - J < threshold:
 		reCalcMean()
 		break
@@ -176,4 +176,4 @@ outfile.close()
 
 # ans = gm(n_components=2, covariance_type='full', tol=0.001, reg_covar=0.000006, max_iter=100, n_init=1, init_params='kmeans', weights_init=None, means_init=None, precisions_init=None, random_state=None, warm_start=False, verbose=0, verbose_interval=10).fit(wholeData)
 # print("SKLEARN: \n",ans.means_)
-gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster, args['output'])
+# gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster, args['output'])

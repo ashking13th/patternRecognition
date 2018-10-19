@@ -100,7 +100,7 @@ def logLikelihood():
         likelihood += np.log10(l)
     return likelihood
 
-def algorithmEM():
+def algorithmEM(outputPath):
     print("GMM Start")
     lPrev = 0
     lCurrent = -1
@@ -120,7 +120,7 @@ def algorithmEM():
         # print("Iteration No. : ", iterationCount," ; Time: ", (datetime.now()-loopTime))
         loopTime = datetime.now()
         print(lCurrent, "\t diff: \t",(lPrev-lCurrent))
-        gp.plotClustersAndMean(X, noOfClusters, assignCluster(), meanVect, "GMM",True)
+        gp.plotClustersAndMean(outputPath+"GMM"+str(iterationCount),X, noOfClusters, assignCluster(), meanVect, "GMM",True)
         print("Covariance matrix shape: ",covMatVect[0])
         if lPrev != -1 and (lPrev-lCurrent) < threshold:
             break
@@ -175,7 +175,7 @@ def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsA
     # print("Cat")
     globals()['piVect'] = np.zeros(noOfClusters, dtype=np.float64)
     initialize(pointsAssignCluster)
-    algorithmEM()
+    algorithmEM(outputName)
     print(meanVect)
 
     targetPath = outputName+".gmm"
