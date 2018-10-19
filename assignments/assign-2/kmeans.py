@@ -6,6 +6,7 @@ from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture as gm
 import gmm
 import grapher as gp
+import errno
 
 ''' 
 	Select k distinct random vectors from the features dataset for each (class(combining all images data))
@@ -17,6 +18,7 @@ numOfClusters = 3
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
+ap.add_argument("-o", "--output", required=True, help="Output mean location")
 args = vars(ap.parse_args())
 
 cntForFile = 0
@@ -146,6 +148,26 @@ print("Bag of visual words")
 if numOfClusters> 3:
 	print(BOVW)
 print("Final mean Vector = ", meanVector)
+
+targetPath = args['output']+".kmeans"
+if not os.path.exists(os.path.dirname(args['output'])):
+        try:
+            os.makedirs(os.path.dirname(args['output']))
+        except OSError as exc:  # Guard against race condition
+            if exc.errno != errno.EEXIST:
+                raise
+try:
+	print("target File: ", targetPath)
+	outfile = open(targetPath, "w")
+except IOError:
+	print("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")
+
+for mean in meanVector:
+	for feature in mean:
+		outfile.write(feature+" ")
+	outfile.write("\n")
+outfile.close()
+
 # if len(wholeData[0]) < 3:
 # 	gp.plotClustersAndMean(wholeData, numOfClusters, pointsAssignCluster, meanVector)
 # print("Cluster centers = ", kmeans.cluster_centers_)
@@ -154,4 +176,4 @@ print("Final mean Vector = ", meanVector)
 
 # ans = gm(n_components=2, covariance_type='full', tol=0.001, reg_covar=0.000006, max_iter=100, n_init=1, init_params='kmeans', weights_init=None, means_init=None, precisions_init=None, random_state=None, warm_start=False, verbose=0, verbose_interval=10).fit(wholeData)
 # print("SKLEARN: \n",ans.means_)
-gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster)
+gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster, args['output'])

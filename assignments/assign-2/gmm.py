@@ -4,6 +4,7 @@ import matplotlib
 from random import randint
 from datetime import datetime
 import grapher as gp
+import errno
 
 start_time = datetime.now()
 X = []
@@ -113,6 +114,7 @@ def algorithmEM():
         loopTime = datetime.now()
         print(lCurrent, "\t diff: \t",(lPrev-lCurrent))
         gp.plotClustersAndMean(X, noOfClusters, assignCluster(), meanVect, "GMM",True)
+        print("Covariance matrix shape: ",covMatVect[0])
         if lPrev != -1 and (lPrev-lCurrent) < threshold:
             break
 
@@ -148,7 +150,7 @@ def assignCluster():
     return clusterAssignment
 
 
-def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsAssignCluster):
+def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsAssignCluster,outputName):
     # print("In gmm ")
     globals()['threshold'] = threshold
     globals()['noOfPoints'] = noOfPoints
@@ -168,6 +170,25 @@ def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsA
     initialize(pointsAssignCluster)
     algorithmEM()
     print(meanVect)
+
+    targetPath = outputName+".gmm"
+    if not os.path.exists(os.path.dirname(outputName)):
+            try:
+                os.makedirs(os.path.dirname(outputName))
+            except OSError as exc:  # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
+    try:
+        print("target File: ", targetPath)
+        outfile = open(targetPath, "w")
+    except IOError:
+        print("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")
+
+    for mean in meanVect:
+        for feature in mean:
+            outfile.write(feature+" ")
+        outfile.write("\n")
+    outfile.close()
 
     # gp.plotClustersAndMean(X, noOfClusters, assignCluster(), meanVect, "GMM",True)
 

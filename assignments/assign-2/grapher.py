@@ -38,6 +38,6 @@ def plotClustersAndMean(wholeData, numOfClusters, pointsAssignCluster, meanVecto
         plt.scatter([meanVector[k, 0]], [meanVector[k, 1]], marker='*')
         plt.title(plotName)
     plt.draw()
-    plt.pause(2)
+    plt.pause(0.5)
     plt.clf()
     return
