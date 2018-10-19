@@ -122,17 +122,17 @@ while True:
 	J = assignDataPt()
 	# print(counter," : J: ", J, "\t : ",(Jprev-J)," : ",(datetime.now()-loopStarttime))
 	# meanVector, " : ", 
-	print(counter, " : Cost = ", (Jprev-J))
+	# print(counter, " : Cost = ", (Jprev-J))
 	counter += 1
-	if len(wholeData[0]) < 3:
-		gp.plotClustersAndMean(args['output']+"counter",wholeData, numOfClusters, pointsAssignCluster, meanVector,"K-Means")
+	# if len(wholeData[0]) < 3:
+		# gp.plotClustersAndMean(args['output']+"counter",wholeData, numOfClusters, pointsAssignCluster, meanVector,"K-Means")
 	if Jprev != -1 and Jprev - J < threshold:
 		reCalcMean()
 		break
 	Jprev = J
 	reCalcMean()
 	b = datetime.now()
-	print(b-a)
+	# print(b-a)
 
 
 lengthOfFile = np.array(lengthOfFile)
@@ -148,7 +148,7 @@ for i, lenFile in enumerate(lengthOfFile):
 print("Bag of visual words")
 if numOfClusters> 3:
 	print(BOVW)
-print("Final mean Vector = ", meanVector)
+# print("Final mean Vector = ", meanVector)
 
 targetPath = args['output']+".kmeans"
 if not os.path.exists(os.path.dirname(args['output'])):
@@ -175,6 +175,50 @@ outfile.close()
 
 # print("Initializer: ",pointsAssignCluster)
 
-# ans = gm(n_components=2, covariance_type='full', tol=0.001, reg_covar=0.000006, max_iter=100, n_init=1, init_params='kmeans', weights_init=None, means_init=None, precisions_init=None, random_state=None, warm_start=False, verbose=0, verbose_interval=10).fit(wholeData)
-# print("SKLEARN: \n",ans.means_)
-gmm2.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster, args['output'])
+ans = gm(n_components=numOfClusters, covariance_type='diag', tol=0.001, reg_covar=1e-6, max_iter=100, n_init=1, init_params='kmeans', weights_init=None, means_init=None, precisions_init=None, random_state=None, warm_start=False, verbose=0, verbose_interval=10).fit(wholeData)
+print("SKLEARN: \n",ans.means_)
+print("Lower bound on gmm: ",ans.lower_bound_)
+print("Cov: \n",ans.covariances_)
+print("Pi: ",ans.weights_)
+# gmm2.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster, args['output'])
+
+targetPath = args['output']+".kmeans"
+if not os.path.exists(os.path.dirname(args['output'])):
+        try:
+            os.makedirs(os.path.dirname(args['output']))
+        except OSError as exc:  # Guard against race condition
+            if exc.errno != errno.EEXIST:
+                raise
+try:
+	targetPath = args['output']+"GMM.means"
+	meanFile = open(targetPath, "w")
+	print("target File: ", targetPath)
+
+	for mean in meanVector:
+		for feature in mean:
+			meanFile.write(str(feature)+" ")
+		meanFile.write("\n")
+	meanFile.close()
+
+	targetPath = args['output']+"GMM.piVect"
+	piFile = open(targetPath,"w")
+	print("target File: ", targetPath)
+
+	for pi in ans.weights_:
+		piFile.write(str(pi)+" ")
+	piFile.write("\n")
+	piFile.close()
+
+	targetPath = args['output']+"GMM.cov"
+	covFile = open(targetPath,"w")
+	print("target File: ", targetPath)
+
+	for covMat in ans.covariances_:
+		for cov in covMat:
+			covFile.write(str(cov)+" ")
+		covFile.write("\n")
+
+	covFile.close()
+
+except IOError:
+	("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")

@@ -14,13 +14,16 @@ from PIL import Image
 segmentColors = [[0,0,255],[0,255,0],[255,0,0]]
 colors = [(0, 0, 255), (0, 255, 0), (255, 0, 0)]
 
+def gammaAllot(patchFeatures):
+    pass
+
 def allotCluster(patchFeatures, meanVector):
     dist = []
     for mean in meanVector:
         dist.append(np.linalg.norm(patchFeatures-mean)**2)
     mini = np.argmin(dist)
     return mini
-    
+
 
 
 # def createOverlay(height, breadth, allotment):

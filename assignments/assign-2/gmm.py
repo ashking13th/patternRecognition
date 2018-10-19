@@ -124,6 +124,7 @@ def algorithmEM(outputPath):
         print("Covariance matrix shape: ",covMatVect[0])
         if lPrev != -1 and (lPrev-lCurrent) < threshold:
             break
+    return lCurrent
 
 def initialize(pointsAssignCluster):
     global piVect
@@ -175,7 +176,7 @@ def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsA
     # print("Cat")
     globals()['piVect'] = np.zeros(noOfClusters, dtype=np.float64)
     initialize(pointsAssignCluster)
-    algorithmEM(outputName)
+    lc = algorithmEM(outputName)
     print(meanVect)
 
     targetPath = outputName+".gmm"
@@ -194,7 +195,9 @@ def master(threshold, noOfPoints, X, dimensions, noOfClusters, meanVect, pointsA
     for mean in meanVect:
         for feature in mean:
             outfile.write(str(feature)+" ")
-        outfile.write("\n")
+        outfile.write("\n\n")
+    outfile.write(lc)
+    outfile.write("\n")
     outfile.close()
 
     # gp.plotClustersAndMean(X, noOfClusters, assignCluster(), meanVect, "GMM",True)
