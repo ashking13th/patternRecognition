@@ -11,6 +11,15 @@ def plotHistogram(values, bins, type, name):
     plt.show()
 
 
+def likelihoodPlotter(values, graphName, title):
+    y = range(1,len(values)+1)
+    plt.plot(values, y)
+    plt.xlabel("No. of")
+    plt.ylabel("")
+    plt.title(graphName)
+    plt.savefig(graphName+".jpg")
+
+
 def plotClustersAndMean(outputPath, wholeData, numOfClusters, pointsAssignCluster, meanVector, plotName="My beautiful  Cat",flag=False):
     xFeature = []
     yFeature = []
