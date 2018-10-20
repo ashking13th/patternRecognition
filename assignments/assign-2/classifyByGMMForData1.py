@@ -126,6 +126,15 @@ def gaussian(covMat, x, mean):
     # print("Gaussian: ",gaussian)
     return gaussian
 
+def allotClass(x, nClass, clusters, covMatVect, meanVect, piVect):
+    likelihood = np.zeros((nClass))
+    for numC in range(nClass):
+        for k in range(clusters):
+            likelihood[numC] += piVect[numC][k] * gaussian(covMatVect[numC][k], x, meanVect[numC][k])
+    ans = np.argmax(likelihood)
+    print("likelihood: ",likelihood)
+    print(ans)
+    return np.argmax(likelihood)
 
 def gammaAllot(x, covMatVect, meanVector, piVect, clusters):
     gammaVect = np.zeros((clusters))
@@ -148,7 +157,7 @@ def gammaAllot(x, covMatVect, meanVector, piVect, clusters):
     return ans
 
 
-def plot(covMatVect, meanVector, name, classname="1"):
+def plot(covMatVect, meanVector, name, piVect, classname="1"):
     # mainList = mainList
     nClass = 3
     numFeature = 2
@@ -172,6 +181,9 @@ def plot(covMatVect, meanVector, name, classname="1"):
                 minMax[j, 1] = max(minMax[j,1], np.ceil(np.amax(mainList[i][:, j])))
             count = 1
 
+    print("Found MinMax")
+    print(minMax)
+
     dataRange = np.zeros((numFeature))
     for i in range(numFeature):
         dataRange[i] = 0.1*(minMax[i, 1] - minMax[i, 0])
@@ -181,14 +193,18 @@ def plot(covMatVect, meanVector, name, classname="1"):
 
     tellClassNum = np.zeros((np.size(x,0)*np.size(y,0), nClass))
 
+    allotment = np.zeros(3)
     count = 0
     for j in y:
         for i in x:
             for k in range(nClass):
                 dataPt = np.array([i,j])
-                tellClassNum[count, k] = gammaAllot(dataPt, covMatVect[k], meanVect[k], piVect[k], clusters)
+                # a = gammaAllot(dataPt, covMatVect[k], meanVect[k], piVect[k], clusters)
+                a = allotClass(dataPt, nClass, clusters, covMatVect, meanVect, piVect)
+                tellClassNum[count, k] = a
+                allotment[a] += 1
             count += 1
-
+    print("Allotment: ", allotment)
     lenX = np.size(x,0)
     Z = np.zeros((nClass, clusters, lenX, lenX))
 
@@ -321,7 +337,7 @@ for root, dirs, files in os.walk(args["source"]):
         # mainList = np.array(mainList)
 # mainList = np.array(mainList)
 # print(mainList.shape())
-plot(covMatVect, meanVect, args['dest'])
+plot(covMatVect, meanVect, args['dest'], piVect)
 
 # print(ptAssigned)
 #
