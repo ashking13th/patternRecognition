@@ -16,8 +16,9 @@ def likelihoodPlotter(values, graphName, title):
     plt.plot(values, y)
     plt.xlabel("No. of")
     plt.ylabel("")
-    plt.title(graphName)
+    plt.title(title)
     plt.savefig(graphName+".jpg")
+    
 
 
 def plotClustersAndMean(outputPath, wholeData, numOfClusters, pointsAssignCluster, meanVector, plotName="My beautiful  Cat",flag=False):
