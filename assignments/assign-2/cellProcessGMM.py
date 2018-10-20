@@ -27,17 +27,20 @@ def fileHandle(fileName):
     file.close()
     return wholeData
 
-def covaMat(mat):
-    vect = np.zeros(shape=(3,2,2))
-    for i in range(3):
-        for j in range(2):
+def covaMat(mat, clusters, dimensions):
+    vect = np.zeros(shape=(clusters, dimensions,dimensions))
+    for i in range(clusters):
+        for j in range(dimensions):
             vect[i,j,j] = mat[i][j]
     return vect
 
 
 meanVector = fileHandle(args['mean'])
-covMatVect = covaMat(fileHandle(args['cov']))
-piVect = fileHandle(args['pi'])
+piVect = fileHandle(args['pi'])[0]
+print("Length of piVector: ",piVect)
+clusters = len(meanVector)
+dimensions = len(meanVector[0])
+covMatVect = covaMat(fileHandle(args['cov']),clusters, dimensions)
 print(meanVector)
 i = 0
 for root, dirs, files in os.walk(args["source"]):
@@ -47,4 +50,4 @@ for root, dirs, files in os.walk(args["source"]):
         print("Image No. : ", i)
         path = os.path.relpath(os.path.join(root, f), ".")
         target = os.path.relpath(os.path.join(root, os.path.splitext(f)[0]))
-        sg.segment(fileHandle(path), target, f, meanVector, args['dest'])
+        sg.segment(fileHandle(path), target, f, meanVector, args['dest'],covMatVect, piVect, clusters)

@@ -14,8 +14,34 @@ from PIL import Image
 segmentColors = [[0,0,255],[0,255,0],[255,0,0]]
 colors = [(0, 0, 255), (0, 255, 0), (255, 0, 0)]
 
-def gammaAllot(patchFeatures):
-    pass
+
+def gaussian(covMat, x, mean):
+    # print(mean)
+    numFeature = np.size(mean)
+    gaussian = -(1/2)*np.sum((np.transpose(x-mean)
+                              * (np.linalg.inv(covMat)))*(x-mean))
+    gaussian = np.exp(gaussian)
+    deter = np.linalg.det(covMat)
+    gaussian *= deter**(-1./2)
+    gaussian *= (2*np.pi)**(-numFeature/2.)
+    # print("Gaussian: ",gaussian)
+    return gaussian
+
+def gammaAllot(x, covMatVect, meanVector, piVect, clusters):
+    gammaVect = np.zeros(clusters)
+    sum = 0
+    gaussians = np.zeros(clusters)
+    print("Gamma length: ",len(gammaVect))
+    print("Pi length: ", len(piVect))
+    print("Mean length: ", len(meanVector))
+
+    for k in range(clusters):
+        gaussians[k] = gaussian(covMatVect[k], x, meanVector[k])
+    for k in range(clusters):
+        sum += piVect[k]*gaussians[k]
+    for k in range(clusters):
+        gammaVect[k] = (piVect[k]*gaussians[k])/sum
+    return np.argmax(gammaVect)
 
 def allotCluster(patchFeatures, meanVector):
     dist = []
@@ -79,7 +105,7 @@ def cellSegmentaion(height, breadth, allotment, targetPath, dest, filename):
     im.save(path,"JPEG")
     print("YAAY")
 
-def segment(features, targetPath, filename, meanVector, dest):
+def segment(features, targetPath, filename, meanVector, dest, covMatVect, piVect, clusters):
     height = 512
     breadth = 512
 
@@ -93,6 +119,7 @@ def segment(features, targetPath, filename, meanVector, dest):
         row = []
         for j in range(0, breadth, 7):
             seg = allotCluster(features[patchCount], meanVector)
+            seg = gammaAllot(features[patchCount], covMatVect, meanVector, piVect, clusters)
             row.append(seg)
             abc.append(seg)
             patchCount += 1
