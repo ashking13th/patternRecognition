@@ -1,0 +1,4 @@
+No of clusters: 32
+class 1 : 125 0 0
+class 2 : 11 114 0
+class 3 : 6 0 244

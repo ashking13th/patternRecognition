@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import os, argparse, math, random
+import os
+import argparse
+import math
+import random
 from datetime import datetime
 from sklearn.cluster import KMeans
 # from sklearn.mixture import GaussianMixture as gm
@@ -22,6 +25,7 @@ ap.add_argument("-c3", "--cov3", required=True, help="mean 3 location")
 
 args = vars(ap.parse_args())
 
+
 def fileHandle(fileName):
     wholeData = []
     file = open(fileName)
@@ -40,6 +44,7 @@ def covaMat(mat, clusters, dimensions):
         for j in range(dimensions):
             vect[i, j, j] = mat[i][j]
     return vect
+
 
 meanVect = []
 piVect = []
@@ -65,6 +70,7 @@ covMatVect.append(covaMat(fileHandle(args['cov3']), clusters, dimensions))
 
 inpData = []
 
+
 def fileHandle2(fileName):
     # wholeData = []
     file = open(fileName)
@@ -82,7 +88,8 @@ nClass = 3
 
 def gaussian(covMat, x, mean):
     numFeature = np.size(mean)
-    gaussian = -(1/2)*np.sum((np.transpose(x-mean)*(np.linalg.inv(covMat)))*(x-mean))
+    gaussian = -(1/2)*np.sum((np.transpose(x-mean)
+                              * (np.linalg.inv(covMat)))*(x-mean))
     gaussian = np.exp(gaussian)
     deter = np.linalg.det(covMat)
     gaussian *= deter**(-1./2)
@@ -116,23 +123,21 @@ def gaussian(covMat, x, mean):
 imgAssign = np.zeros((nClass))
 
 for root, dirs, files in os.walk(args["source"]):
-	for f in files:
-		
-		path = os.path.relpath(os.path.join(root, f), ".")
-		print("read = ", path)
-		fileHandle2(path)
-		inpData = np.array(inpData)
-		
-		for ind in range(len(inpData)):
-			ptAssigned = np.zeros((nClass))
-			likelihood = np.zeros((nClass))
-			for numC in range(nClass):
-				for k in range(clusters):
-					likelihood[numC] += piVect[numC][k] * gaussian(covMatVect[numC][k], inpData[ind], meanVect[numC][k])
-			ptAssigned[np.argmax(likelihood)] += 1
-		imgAssign[np.argmax(ptAssigned)] += 1
-		inpData = []
-		print("Classified in = ", np.argmax(ptAssigned))
+    for f in files:
+        path = os.path.relpath(os.path.join(root, f), ".")
+        print("read = ", path)
+        fileHandle2(path)
+        inpData = np.array(inpData)
 
-print(imgAssign)
+        ptAssigned = np.zeros((nClass))
+        for ind in range(len(inpData)):
+            
+            likelihood = np.zeros((nClass))
+            for numC in range(nClass):
+                for k in range(clusters):
+                    likelihood[numC] += piVect[numC][k] * gaussian(covMatVect[numC][k], inpData[ind], meanVect[numC][k])
+            ptAssigned[np.argmax(likelihood)] += 1
+        inpData = []
+        
 
+print(ptAssigned)

@@ -15,7 +15,7 @@ import errno
 '''
 start_time = datetime.now()
 
-numOfClusters = 3
+numOfClusters = 32
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
@@ -27,6 +27,7 @@ wholeData = []
 lengthOfFile = []
 
 clusterSize = np.zeros((numOfClusters))
+print("Starting up")
 
 #handling of files
 def fileHandle(fileName):
@@ -71,6 +72,7 @@ def assignDataPt():
 
 def reCalcMean():
 	for i in range(numOfClusters):
+		print("Cluster Size[i]: ",clusterSize[i])
 		meanVector[i] = clusters[i]/clusterSize[i]
 		clusters[i] = 0
 		clusterSize[i] = 0
@@ -85,6 +87,7 @@ print("Process start")
 for root, dirs, files in os.walk(args["source"]):
 	for f in files:
 		path = os.path.relpath(os.path.join(root, f), ".")
+		# print("read: ",path)
 		fileHandle(path)
 		lengthOfFile.append(len(wholeData)-cntForFile)
 		cntForFile = len(wholeData)
@@ -114,13 +117,13 @@ threshold = 1e-3
 
 initMean()
 pointsAssignCluster = np.zeros((np.size(wholeData,axis=0)))
-# print(wholeData)
-
+# # print(wholeData)
+# loopStarttime = datetime.now()
 # counter = 0
 # while True:
 # 	a = datetime.now()
 # 	J = assignDataPt()
-# 	# print(counter," : J: ", J, "\t : ",(Jprev-J)," : ",(datetime.now()-loopStarttime))
+# 	print(counter," : J: ", J, "\t : ",(Jprev-J)," : ",(datetime.now()-loopStarttime))
 # 	# meanVector, " : ", 
 # 	# print(counter, " : Cost = ", (Jprev-J))
 # 	counter += 1
@@ -135,20 +138,38 @@ pointsAssignCluster = np.zeros((np.size(wholeData,axis=0)))
 # 	# print(b-a)
 
 
-lengthOfFile = np.array(lengthOfFile)
-BOVW = np.zeros((len(lengthOfFile), numOfClusters))
+# lengthOfFile = np.array(lengthOfFile)
+# BOVW = np.zeros((len(lengthOfFile), numOfClusters))
 
-cnt = 0
-for i, lenFile in enumerate(lengthOfFile):
-	for ind in range(lenFile):
-	 	j = pointsAssignCluster[cnt + ind]
-	 	BOVW[i, int(j)] += 1 
-	cnt += lenFile
+# cnt = 0
+# for i, lenFile in enumerate(lengthOfFile):
+# 	for ind in range(lenFile):
+# 	 	j = pointsAssignCluster[cnt + ind]
+# 	 	BOVW[i, int(j)] += 1 
+# 	cnt += lenFile
 
 # print("Bag of visual words")
 # if numOfClusters> 3:
 # 	print(BOVW)
-# print("Final mean Vector = ", meanVector)
+# 	targetPath = args['output']+".BOW"
+# 	if not os.path.exists(os.path.dirname(args['output'])):
+# 			try:
+# 				os.makedirs(os.path.dirname(args['output']))
+# 			except OSError as exc:  # Guard against race condition
+# 				if exc.errno != errno.EEXIST:
+# 					raise
+# 	try:
+# 		print("target File: ", targetPath)
+# 		outfile = open(targetPath, "w")
+# 	except IOError:
+# 		print("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")
+
+# 	for bag in BOVW:
+# 		for a in bag:
+# 			outfile.write(str(a)+" ")
+# 		outfile.write("\n")
+# 	outfile.close()
+# # print("Final mean Vector = ", meanVector)
 
 # targetPath = args['output']+".kmeans"
 # if not os.path.exists(os.path.dirname(args['output'])):
@@ -175,11 +196,17 @@ for i, lenFile in enumerate(lengthOfFile):
 
 # print("Initializer: ",pointsAssignCluster)
 
+
+
+
+
+
+##########################################################################
 ans = gm(n_components=numOfClusters, covariance_type='diag', tol=0.001, reg_covar=1e-6, max_iter=150, n_init=1, init_params='kmeans', weights_init=None, means_init=None, precisions_init=None, random_state=None, warm_start=False, verbose=0, verbose_interval=10).fit(wholeData)
-print("SKLEARN: \n",ans.means_)
-print("Lower bound on gmm: ",ans.lower_bound_)
-print("Cov: \n",ans.covariances_)
-print("Pi: ",ans.weights_)
+# print("SKLEARN: \n",ans.means_)
+# print("Lower bound on gmm: ",ans.lower_bound_)
+# print("Cov: \n",ans.covariances_)
+# print("Pi: ",ans.weights_)
 # gmm2.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster, args['output'])
 
 targetPath = args['output']+".kmeans"
