@@ -2,9 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os, argparse, math, random
 from datetime import datetime
-from sklearn.cluster import KMeans
-from sklearn.mixture import GaussianMixture
-from scipy.interpolate import spline
 import matplotlib.pyplot as plt
 import gmm4
 

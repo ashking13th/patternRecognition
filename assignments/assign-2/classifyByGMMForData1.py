@@ -5,9 +5,7 @@ import argparse
 import math
 import random
 from datetime import datetime
-from sklearn.cluster import KMeans
 import matplotlib.patches as mpatches
-# from sklearn.mixture import GaussianMixture as gm
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
@@ -134,7 +132,7 @@ def plot(covMatVect, meanVector, name, piVect, classname="1"):
     colors = ['#136906', '#fcbdfc', '#e5ff00', '#ff0000', '#3700ff', '#000000']
 
 	# Resolution affects the time required to process.
-    res = 150
+    res = 200
 
     print("mainList size: ",len(mainList))
     # print("mainList[0].shape(): ",mainList[0].shape())

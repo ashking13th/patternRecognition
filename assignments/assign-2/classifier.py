@@ -5,8 +5,6 @@ import argparse
 import math
 import random
 from datetime import datetime
-from sklearn.cluster import KMeans
-# from sklearn.mixture import GaussianMixture as gm
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")

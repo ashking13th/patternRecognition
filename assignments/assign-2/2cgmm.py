@@ -5,8 +5,6 @@ import argparse
 import math
 import random
 from datetime import datetime
-from sklearn.cluster import KMeans
-from sklearn.mixture import GaussianMixture as gm
 import gmm
 import gmm2
 import grapher as gp
