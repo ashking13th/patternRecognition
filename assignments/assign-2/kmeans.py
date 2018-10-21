@@ -15,7 +15,7 @@ import errno
 '''
 start_time = datetime.now()
 
-numOfClusters = 32
+numOfClusters = 3
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
@@ -127,8 +127,8 @@ while True:
 	# meanVector, " : ", 
 	# print(counter, " : Cost = ", (Jprev-J))
 	counter += 1
-	# if len(wholeData[0]) < 3:
-		# gp.plotClustersAndMean(args['output']+"counter",wholeData, numOfClusters, pointsAssignCluster, meanVector,"K-Means")
+	if len(wholeData[0]) < 3:
+		gp.plotClustersAndMean(args['output']+str(counter)+"_",wholeData, numOfClusters, pointsAssignCluster, meanVector,"K-Means")
 	if Jprev != -1 and Jprev - J < threshold:
 		reCalcMean()
 		break
@@ -138,57 +138,57 @@ while True:
 	# print(b-a)
 
 
-lengthOfFile = np.array(lengthOfFile)
-BOVW = np.zeros((len(lengthOfFile), numOfClusters))
+# lengthOfFile = np.array(lengthOfFile)
+# BOVW = np.zeros((len(lengthOfFile), numOfClusters))
 
-cnt = 0
-for i, lenFile in enumerate(lengthOfFile):
-	for ind in range(lenFile):
-	 	j = pointsAssignCluster[cnt + ind]
-	 	BOVW[i, int(j)] += 1 
-	cnt += lenFile
+# cnt = 0
+# for i, lenFile in enumerate(lengthOfFile):
+# 	for ind in range(lenFile):
+# 	 	j = pointsAssignCluster[cnt + ind]
+# 	 	BOVW[i, int(j)] += 1 
+# 	cnt += lenFile
 
-print("Bag of visual words")
-if numOfClusters> 3:
-	print(BOVW)
-	targetPath = args['output']+".BOW"
-	if not os.path.exists(os.path.dirname(args['output'])):
-			try:
-				os.makedirs(os.path.dirname(args['output']))
-			except OSError as exc:  # Guard against race condition
-				if exc.errno != errno.EEXIST:
-					raise
-	try:
-		print("target File: ", targetPath)
-		outfile = open(targetPath, "w")
-	except IOError:
-		print("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")
+# print("Bag of visual words")
+# if numOfClusters> 3:
+# 	print(BOVW)
+# 	targetPath = args['output']+".BOW"
+# 	if not os.path.exists(os.path.dirname(args['output'])):
+# 			try:
+# 				os.makedirs(os.path.dirname(args['output']))
+# 			except OSError as exc:  # Guard against race condition
+# 				if exc.errno != errno.EEXIST:
+# 					raise
+# 	try:
+# 		print("target File: ", targetPath)
+# 		outfile = open(targetPath, "w")
+# 	except IOError:
+# 		print("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")
 
-	for bag in BOVW:
-		for a in bag:
-			outfile.write(str(a)+" ")
-		outfile.write("\n")
-	outfile.close()
-# print("Final mean Vector = ", meanVector)
+# 	for bag in BOVW:
+# 		for a in bag:
+# 			outfile.write(str(a)+" ")
+# 		outfile.write("\n")
+# 	outfile.close()
+# # print("Final mean Vector = ", meanVector)
 
-targetPath = args['output']+".kmeans"
-if not os.path.exists(os.path.dirname(args['output'])):
-        try:
-            os.makedirs(os.path.dirname(args['output']))
-        except OSError as exc:  # Guard against race condition
-            if exc.errno != errno.EEXIST:
-                raise
-try:
-	print("target File: ", targetPath)
-	outfile = open(targetPath, "w")
-except IOError:
-	print("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")
+# targetPath = args['output']+".kmeans"
+# if not os.path.exists(os.path.dirname(args['output'])):
+#         try:
+#             os.makedirs(os.path.dirname(args['output']))
+#         except OSError as exc:  # Guard against race condition
+#             if exc.errno != errno.EEXIST:
+#                 raise
+# try:
+# 	print("target File: ", targetPath)
+# 	outfile = open(targetPath, "w")
+# except IOError:
+# 	print("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")
 
-for mean in meanVector:
-	for feature in mean:
-		outfile.write(str(feature)+" ")
-	outfile.write("\n")
-outfile.close()
+# for mean in meanVector:
+# 	for feature in mean:
+# 		outfile.write(str(feature)+" ")
+# 	outfile.write("\n")
+# outfile.close()
 
 # if len(wholeData[0]) < 3:
 # 	gp.plotClustersAndMean(wholeData, numOfClusters, pointsAssignCluster, meanVector)
