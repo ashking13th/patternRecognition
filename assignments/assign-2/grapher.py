@@ -29,8 +29,8 @@ def plotClustersAndMean(outputPath, wholeData, numOfClusters, pointsAssignCluste
     plt.xlabel('Mean')
     plt.ylabel('Dispersion')
 
-    class_colours = ['green', 'red', 'blue']
-    class_colours1 = ['green', 'yellow', 'blue']
+    class_colours = ['blue', 'red', 'green']
+    class_colours1 = ['blue', 'yellow', 'green']
     classes = ["Cluster1", "Cluster2", "Cluster3"]
 
     recs = []
