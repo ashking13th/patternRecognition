@@ -134,7 +134,7 @@ def plot(covMatVect, meanVector, name, piVect, classname="1"):
     colors = ['#136906', '#fcbdfc', '#e5ff00', '#ff0000', '#3700ff', '#000000']
 
 	# Resolution affects the time required to process.
-    res = 100
+    res = 150
 
     print("mainList size: ",len(mainList))
     # print("mainList[0].shape(): ",mainList[0].shape())
@@ -279,9 +279,9 @@ def plot(covMatVect, meanVector, name, piVect, classname="1"):
             classes = ["Class 1 Data", "Class 2 Data", "Class 3 Data", "Class 1 Contours", "Class 2 Contours", "Class 3 Contours"]
 
             for index in range(clusters):
-                bx.contour(X, Y, Z[0][index][0], alpha=1, linewidth=10, colors=colors[0], label="Class 1 Contour")
-                bx.contour(X, Y, Z[1][index][0], alpha=1, linewidth=10, colors="#824003", label="Class 2 Contour")
-                bx.contour(X, Y, Z[2][index][0], alpha=1, linewidth=10, colors="#cc00ff", label="Class 3 Contour")
+                bx.contour(X, Y, Z[0][index], alpha=1, linewidth=10, colors=colors[0], label="Class 1 Contour")
+                bx.contour(X, Y, Z[1][index], alpha=1, linewidth=10, colors="#824003", label="Class 2 Contour")
+                bx.contour(X, Y, Z[2][index], alpha=1, linewidth=10, colors="#cc00ff", label="Class 3 Contour")
 
             recs = []
             for i in range(0, len(class_colours)):

@@ -45,10 +45,10 @@ for root, dirs, files in os.walk(args["source"]):
 
 wholeData = np.array(wholeData)
 # print("Len = ", len(wholeData))
-
-while (2**kabTak <= 32):
+kabTak = 3
+while (2**kabTak <= 8):
 	apniList = []
-	for ind in range(16):
+	for ind in range(5):
 		GMM = GaussianMixture(n_components = 2**kabTak, covariance_type = 'diag', tol = 0.001, reg_covar = 1e-6, max_iter = ind+1, n_init = 1, init_params = 'kmeans', weights_init = None, means_init = None, precisions_init = None, random_state = None, warm_start = False, verbose = 0, verbose_interval = 10).fit(wholeData)
 		apniList.append(GMM.lower_bound_)
 	makeGraph(apniList, args["name"] + "_B"+ str(2**kabTak), "Iterations vs loglikelihood")

@@ -17,7 +17,7 @@ import errno
 '''
 start_time = datetime.now()
 
-numOfClusters = 16
+numOfClusters = 2
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
