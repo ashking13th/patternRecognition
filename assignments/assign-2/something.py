@@ -143,27 +143,68 @@ def gaussian(covMat, x, mean):
 # 	for i in precision:
 # 		print(i)
 
-
+numFeature = 2
 imgAssign = np.zeros((nClass))
 
-for root, dirs, files in os.walk(args["source"]):
-    for f in files:
-        path = os.path.relpath(os.path.join(root, f), ".")
-        print("read = ", path)
-        fileHandle2(path)
-        inpData = np.array(inpData)
+minMax = np.zeros((numFeature, 2))
+colors = ['#136906', '#fcbdfc', '#e5ff00', '#ff0000', '#3700ff', '#000000']
 
-        ptAssigned = np.zeros((nClass))
-        for ind in range(len(inpData)):
+# Resolution affects the time required to process.
+res = 100
 
-            likelihood = np.zeros((nClass))
-            for numC in range(nClass):
-                for k in range(clusters):
-                    likelihood[numC] += piVect[numC][k] * \
-                        gaussian(covMatVect[numC][k],
-                                 inpData[ind], meanVect[numC][k])
-            ptAssigned[np.argmax(likelihood)] += 1
-        inpData = []
+# for root, dirs, files in os.walk(args["source"]):
+#     for f in files:
+#         path = os.path.relpath(os.path.join(root, f), ".")
+#         print("read = ", path)
+#         fileHandle2(path)
+#         inpData = np.array(inpData)
+        
 
+    #     count = 0
+    #     for i in range(nClass):
+    #         for j in range(numFeature):
+    #             if count == 0:
+    #                 minMax[j, 0] = np.ceil(np.amin(mainList[i][:, j]))
+    #                 minMax[j, 1] = np.ceil(np.amax(mainList[i][:, j]))
+    #             else:				
+    #                 minMax[j, 0] = min(minMax[j,0], np.ceil(np.amin(mainList[i][:, j])))
+    #                 minMax[j, 1] = max(minMax[j,1], np.ceil(np.amax(mainList[i][:, j])))
+    #             count = 1
 
-print(ptAssigned)
+    # print("Found MinMax")
+    # print(minMax)
+
+    # dataRange = np.zeros((numFeature))
+    # for i in range(numFeature):
+    #     dataRange[i] = 0.1*(minMax[i, 1] - minMax[i, 0])
+
+x = np.linspace(-6, 6, res)
+y = np.linspace(-6, 6, res)
+
+xf = []
+yf = []
+
+for i in range(3):
+    xf.append([])
+    yf.append([])
+
+for i in x:
+    for j in y:
+        # ptAssigned = np.zeros((nClass))
+        # for ind in range(len(inpData)):
+
+        likelihood = np.zeros((nClass))
+        for numC in range(nClass):
+            for k in range(clusters):
+                likelihood[numC] += piVect[numC][k] * gaussian(covMatVect[numC][k], [i,j], meanVect[numC][k])
+        xf[np.argmax(likelihood)].append(i)
+        yf[np.argmax(likelihood)].append(j)
+        # ptAssigned[np.argmax(likelihood)] += 1
+    # inpData = []
+
+plt.plot(xf[0], yf[0], c='blue',  linestyle="None", marker=".")
+plt.plot(xf[1], yf[1], c='red',  linestyle="None", marker=".")
+plt.plot(xf[2], yf[2], c='green',  linestyle="None", marker=".")
+
+plt.show()
+print("!!!!!!!!!!!!!!!!!!!!!!! Done !!!!!!!!!!!!!!!!!!!!!!!!!!!")

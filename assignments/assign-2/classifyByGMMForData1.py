@@ -103,7 +103,7 @@ def allotClass(x, nClass, clusters, covMatVect, meanVect, piVect):
     ans = np.argmax(likelihood)
     # print("likelihood: ",likelihood)
     # print(ans)
-    return ans
+    return likelihood
 
 def gammaAllot(x, covMatVect, meanVector, piVect, clusters):
     gammaVect = np.zeros((clusters))
@@ -166,14 +166,14 @@ def plot(covMatVect, meanVector, name, piVect, classname="1"):
     count = 0
     for j in y:
         for i in x:
+            dataPt = np.array([i,j])
+            # a = gammaAllot(dataPt, covMatVect[k], meanVect[k], piVect[k], clusters)
+            a = allotClass(dataPt, nClass, clusters, covMatVect, meanVect, piVect)
             for k in range(nClass):
-                dataPt = np.array([i,j])
-                # a = gammaAllot(dataPt, covMatVect[k], meanVect[k], piVect[k], clusters)
-                a = allotClass(dataPt, nClass, clusters, covMatVect, meanVect, piVect)
-                tellClassNum[count, k] = a
-                allotment[a] += 1
+                tellClassNum[count, k] = a[k]
+                # allotment[a] += 1
             count += 1
-    print("Allotment: ", allotment)
+    # print("Allotment: ", allotment)
     lenX = np.size(x,0)
     Z = np.zeros((nClass, clusters, lenX, lenX))
 
