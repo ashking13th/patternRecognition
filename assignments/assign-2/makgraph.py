@@ -6,7 +6,7 @@ from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
 from scipy.interpolate import spline
 import matplotlib.pyplot as plt
-import gmm
+import gmm4
 
 # import grapher as gp
 import errno
@@ -17,7 +17,7 @@ import errno
 '''
 start_time = datetime.now()
 
-numOfClusters = 1
+numOfClusters = 16
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
@@ -130,12 +130,12 @@ threshold = 1e-3
 initMean()
 pointsAssignCluster = np.zeros((np.size(wholeData,axis=0)))
 # print(wholeData)
-
+loopStarttime = datetime.now()
 counter = 0
 while True:
 	a = datetime.now()
 	J = assignDataPt()
-	# print(counter," : J: ", J, "\t : ",(Jprev-J)," : ",(datetime.now()-loopStarttime))
+	print(counter," : J: ", J, "\t : ",(Jprev-J)," : ",(datetime.now()-loopStarttime))
 	# meanVector, " : ", 
 	# print(counter, " : Cost = ", (Jprev-J))
 	counter += 1
@@ -150,7 +150,7 @@ while True:
 
 # apniList = []
 
-GMM = gmm.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster)
+GMM = gmm4.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster)
 	# apniList.append(GMM)
 makeGraph(GMM, args["name"] + "_"+ str(numOfClusters), "Iterations vs loglikelihood")
 # kabTak += 1

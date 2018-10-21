@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import errno
 import argparse
 import math
 import random
@@ -24,6 +25,12 @@ def plotHistogram(values, bins, title, name):
     plt.title(graphName)
     # plt.show()
     print("plot path: ",name)
+    if not os.path.exists(os.path.dirname(name)):
+        try:
+            os.makedirs(os.path.dirname(name))
+        except OSError as exc:  # Guard against race condition
+            if exc.errno != errno.EEXIST:
+                raise
     plt.savefig(name)
 
 def fileHandle(fileName):
@@ -50,8 +57,8 @@ for root, dirs, files in os.walk(args["source"]):
         # print("Image No. : ", i,  " ; ",f)
         path = os.path.relpath(os.path.join(root, f), ".")
         target = os.path.relpath(os.path.join(root, os.path.splitext(f)[0]))
-        # print("target ", os.path.splitext(f)[0])
+        print("target ", os.path.splitext(f)[0])
         # for i in range(fileCount):
-        plotHistogram(wholeData[i], xvalues, target, args['output']+os.path.splitext(f)[0])
+        plotHistogram(wholeData[i], xvalues, args['output']+os.path.splitext(f)[0], )
 
 
