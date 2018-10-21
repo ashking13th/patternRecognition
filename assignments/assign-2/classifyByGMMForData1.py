@@ -83,47 +83,16 @@ def fileHandle2(fileName):
     file.close()
     x = np.array(tempList,float)
     return x
-
-
+    
 nClass = 3
 
-# def rpa(matr):
-# 	trueclass = np.zeros(nClass)
-# 	predictedclass = np.zeros(nClass)
-# 	correctpredicted = np.zeros(nClass)
-# 	totalexample = 0
-# 	for i in range(nClass):
-# 		for j in range(nClass):
-# 			trueclass[i] += matr[i][j]
-# 			predictedclass[i] += matr[j][i]
-# 			totalexample += matr[i][j]
-# 			if i == j:
-# 				correctpredicted[i]=matr[i][j]
-# 	accuracy=np.sum(correctpredicted)/totalexample
-# 	recall=correctpredicted/trueclass
-# 	precision=correctpredicted/predictedclass
-# 	print('Accuracy = ',accuracy)
-# 	print('Recall = ')
-# 	for i in recall:
-# 		print(i)
-# 	print('Precision = ')
-# 	for i in precision:
-# 		print(i)
-
 def gaussian(covMat, x, mean):
-    # print(mean)
-    # covMat = np.array(covMat)
-    # mean  = np.array(mean)
     numFeature = np.size(mean)
-    dev = x-mean
-    dev = np.array(dev)
-    # print(np.size(dev))
-    gaussian = -(1/2)*np.sum((np.transpose(x-mean) * (np.linalg.pinv(covMat)))*(x-mean))
+    gaussian = -(1/2)*np.sum((np.transpose(x-mean) * (np.linalg.inv(covMat)))*(x-mean))
     gaussian = np.exp(gaussian)
     deter = np.linalg.det(covMat)
     gaussian *= deter**(-1./2)
     gaussian *= (2*np.pi)**(-numFeature/2.)
-    # print("Gaussian: ",gaussian)
     return gaussian
 
 def allotClass(x, nClass, clusters, covMatVect, meanVect, piVect):
@@ -132,9 +101,9 @@ def allotClass(x, nClass, clusters, covMatVect, meanVect, piVect):
         for k in range(clusters):
             likelihood[numC] += piVect[numC][k] * gaussian(covMatVect[numC][k], x, meanVect[numC][k])
     ans = np.argmax(likelihood)
-    print("likelihood: ",likelihood)
-    print(ans)
-    return np.argmax(likelihood)
+    # print("likelihood: ",likelihood)
+    # print(ans)
+    return ans
 
 def gammaAllot(x, covMatVect, meanVector, piVect, clusters):
     gammaVect = np.zeros((clusters))

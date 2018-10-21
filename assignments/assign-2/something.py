@@ -86,6 +86,30 @@ def fileHandle2(fileName):
 nClass = 3
 
 
+# def rpa(matr):
+# 	trueclass = np.zeros(nClass)
+# 	predictedclass = np.zeros(nClass)
+# 	correctpredicted = np.zeros(nClass)
+# 	totalexample = 0
+# 	for i in range(nClass):
+# 		for j in range(nClass):
+# 			trueclass[i] += matr[i][j]
+# 			predictedclass[i] += matr[j][i]
+# 			totalexample += matr[i][j]
+# 			if i == j:
+# 				correctpredicted[i]=matr[i][j]
+# 	accuracy=np.sum(correctpredicted)/totalexample
+# 	recall=correctpredicted/trueclass
+# 	precision=correctpredicted/predictedclass
+# 	print('Accuracy = ',accuracy)
+# 	print('Recall = ')
+# 	for i in recall:
+# 		print(i)
+# 	print('Precision = ')
+# 	for i in precision:
+# 		print(i)
+
+
 def gaussian(covMat, x, mean):
     numFeature = np.size(mean)
     gaussian = -(1/2)*np.sum((np.transpose(x-mean)
