@@ -1,0 +1,22 @@
+no of cluster: 1
+[array([56., 38.,  2.]), array([30., 93.,  4.]), array([2., 9., 4.])]
+
+
+no of cluster: 2
+[array([74., 21.,  1.]), array([49., 77.,  1.]), array([5., 9., 1.])]
+
+
+no of cluster: 4
+[array([64., 30.,  2.]), array([30., 95.,  2.]), array([ 4., 10.,  1.])]
+
+
+no of cluster: 8
+[array([53., 42.,  1.]), array([ 20., 107.,   0.]), array([ 3., 12.,  0.])]
+
+
+no of cluster: 16
+[array([41., 55.,  0.]), array([ 17., 110.,   0.]), array([ 1., 14.,  0.])]
+
+
+no of cluster: 32
+[array([24., 72.,  0.]), array([ 10., 117.,   0.]), array([ 1., 14.,  0.])]
