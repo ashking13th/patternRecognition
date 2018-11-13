@@ -15,12 +15,15 @@ import errno
 '''
 start_time = datetime.now()
 
-numOfClusters = 3
+numOfClusters = 64
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--source", required=True, help="Raw data set location")
 ap.add_argument("-o", "--output", required=True, help="Output mean location")
+ap.add_argument("-c", "--clusters",required=True,help="No of clusters")
 args = vars(ap.parse_args())
+
+numOfClusters = int(args["clusters"])
 
 cntForFile = 0
 wholeData = []
@@ -72,7 +75,11 @@ def assignDataPt():
 
 def reCalcMean():
 	for i in range(numOfClusters):
-		print("Cluster Size[i]: ",clusterSize[i])
+		# print("Cluster Size[i]: ",clusterSize[i])
+		# if(clusterSize[i]==0):
+		# 	print("Reinitializing mean :( ")
+		# 	initMean()
+		# 	return
 		meanVector[i] = clusters[i]/clusterSize[i]
 		clusters[i] = 0
 		clusterSize[i] = 0
@@ -98,6 +105,7 @@ clusters = np.zeros((numOfClusters, np.size(wholeData, axis=1)),dtype=np.float64
 
 def initMean():
 	global meanVector
+	meanVector = []
 	temp = random.sample(range(len(wholeData)-1), numOfClusters)
 	for assign in temp:
 		meanVector.append(wholeData[assign])
@@ -138,57 +146,57 @@ while True:
 	# print(b-a)
 
 
-# lengthOfFile = np.array(lengthOfFile)
-# BOVW = np.zeros((len(lengthOfFile), numOfClusters))
+lengthOfFile = np.array(lengthOfFile)
+BOVW = np.zeros((len(lengthOfFile), numOfClusters))
 
-# cnt = 0
-# for i, lenFile in enumerate(lengthOfFile):
-# 	for ind in range(lenFile):
-# 	 	j = pointsAssignCluster[cnt + ind]
-# 	 	BOVW[i, int(j)] += 1 
-# 	cnt += lenFile
+cnt = 0
+for i, lenFile in enumerate(lengthOfFile):
+	for ind in range(lenFile):
+	 	j = pointsAssignCluster[cnt + ind]
+	 	BOVW[i, int(j)] += 1 
+	cnt += lenFile
 
-# print("Bag of visual words")
-# if numOfClusters> 3:
-# 	print(BOVW)
-# 	targetPath = args['output']+".BOW"
-# 	if not os.path.exists(os.path.dirname(args['output'])):
-# 			try:
-# 				os.makedirs(os.path.dirname(args['output']))
-# 			except OSError as exc:  # Guard against race condition
-# 				if exc.errno != errno.EEXIST:
-# 					raise
-# 	try:
-# 		print("target File: ", targetPath)
-# 		outfile = open(targetPath, "w")
-# 	except IOError:
-# 		print("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")
+print("Bag of visual words")
+if numOfClusters> 0:
+	print(BOVW)
+	targetPath = args['output']+str(numOfClusters)+".BOW"
+	if not os.path.exists(os.path.dirname(args['output'])):
+			try:
+				os.makedirs(os.path.dirname(args['output']))
+			except OSError as exc:  # Guard against race condition
+				if exc.errno != errno.EEXIST:
+					raise
+	try:
+		print("target File: ", targetPath)
+		outfile = open(targetPath, "w")
+	except IOError:
+		print("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")
 
-# 	for bag in BOVW:
-# 		for a in bag:
-# 			outfile.write(str(a)+" ")
-# 		outfile.write("\n")
-# 	outfile.close()
-# # print("Final mean Vector = ", meanVector)
+	for bag in BOVW:
+		for a in bag:
+			outfile.write(str(a)+" ")
+		outfile.write("\n")
+	outfile.close()
+# print("Final mean Vector = ", meanVector)
 
-# targetPath = args['output']+".kmeans"
-# if not os.path.exists(os.path.dirname(args['output'])):
-#         try:
-#             os.makedirs(os.path.dirname(args['output']))
-#         except OSError as exc:  # Guard against race condition
-#             if exc.errno != errno.EEXIST:
-#                 raise
-# try:
-# 	print("target File: ", targetPath)
-# 	outfile = open(targetPath, "w")
-# except IOError:
-# 	print("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")
+targetPath = args['output']+".kmeans"
+if not os.path.exists(os.path.dirname(args['output'])):
+        try:
+            os.makedirs(os.path.dirname(args['output']))
+        except OSError as exc:  # Guard against race condition
+            if exc.errno != errno.EEXIST:
+                raise
+try:
+	print("target File: ", targetPath)
+	outfile = open(targetPath, "w")
+except IOError:
+	print("File not created !!!!!!!!!!!!!!!!!!!!!!!!!")
 
-# for mean in meanVector:
-# 	for feature in mean:
-# 		outfile.write(str(feature)+" ")
-# 	outfile.write("\n")
-# outfile.close()
+for mean in meanVector:
+	for feature in mean:
+		outfile.write(str(feature)+" ")
+	outfile.write("\n")
+outfile.close()
 
 # if len(wholeData[0]) < 3:
 # 	gp.plotClustersAndMean(wholeData, numOfClusters, pointsAssignCluster, meanVector)
