@@ -1,9 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os, argparse, math, random
-from datetime import datetime
-from sklearn.cluster import KMeans
-from sklearn.mixture import GaussianMixture as gm
 # import gmm
 # import gmm2
 # import grapher as gp
@@ -16,15 +13,24 @@ import errno
 '''
 start_time = datetime.now()
 
+sourcePath = "../dataset/prep/2b/pca/train"
+targetP = "../output/prep/2b/gmm/train"
+classNames = ["bayou", "chalet", "creek"]
+
 numOfClusters = 64
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-s", "--source", required=True, help="Raw data set location")
-ap.add_argument("-o", "--output", required=True, help="Output mean location")
+# ap.add_argument("-s", "--source", required=True, help="Raw data set location")
+# ap.add_argument("-o", "--output", required=True, help="Output mean location")
 ap.add_argument("-c", "--clusters",required=True,help="No of clusters")
+ap.add_argument("-n", "--classNum", required=True, help="No of clusters")
+ap.add_argument("-l", "--lval", required=True, help="No of clusters")
 args = vars(ap.parse_args())
 
 numOfClusters = int(args["clusters"])
+
+sourceFile = sourcePath + "_" + classNames[int(args["classNum"])] + "_" + args["lval"] + ".pca"
+targetFile = targetP + "_" + classNames[int(args["classNum"])] + "_L" + args["lval"] + "_C"
 
 cntForFile = 0
 wholeData = []
@@ -102,7 +108,7 @@ def reCalcMean():
 #	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@	#
 
 
-fileHandle(args['source'])
+fileHandle(sourceFile)
 
 wholeData = np.array(wholeData)
 meanVector = []
@@ -214,27 +220,17 @@ while True:
 
 
 
-# ########################################################################### #
-# ans = gm(n_components=numOfClusters, covariance_type='diag', tol=0.001, reg_covar=1e-6, max_iter=150, n_init=1, init_params='kmeans', weights_init=None, means_init=None, precisions_init=None, random_state=None, warm_start=False, verbose=0, verbose_interval=10).fit(wholeData)
-# # print("SKLEARN: \n",ans.means_)
-# # print("Lower bound on gmm: ",ans.lower_bound_)
-# # print("Cov: \n",ans.covariances_)
-# # print("Pi: ",ans.weights_)
+apniList, gmmMeans, piVect, covMatVect = gmm4.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster, targetP)
 
-# ########################################################################### #
-
-
-apniList, gmmMeans, piVect, covMatVect = gmm4.master(threshold, len(wholeData), wholeData, len(wholeData[0]), numOfClusters, meanVector, pointsAssignCluster, args['output'])
-
-targetPath = args['output']+".kmeans"
-if not os.path.exists(os.path.dirname(args['output'])):
+targetPath = targetFile
+if not os.path.exists(os.path.dirname(targetFile)):
         try:
-            os.makedirs(os.path.dirname(args['output']))
+            os.makedirs(os.path.dirname(targetFile))
         except OSError as exc:  # Guard against race condition
             if exc.errno != errno.EEXIST:
                 raise
 try:
-	targetPath = args['output']+ str(numOfClusters) + "_GMM.means"
+	targetPath = targetFile+ str(numOfClusters) + "_GMM.means"
 	meanFile = open(targetPath, "w")
 	print("target File: ", targetPath)
 
@@ -244,7 +240,7 @@ try:
 		meanFile.write("\n")
 	meanFile.close()
 
-	targetPath = args['output']+ str(numOfClusters) + "_GMM.piVect"
+	targetPath = targetFile+ str(numOfClusters) + "_GMM.piVect"
 	piFile = open(targetPath,"w")
 	print("target File: ", targetPath)
 
@@ -253,13 +249,14 @@ try:
 	piFile.write("\n")
 	piFile.close()
 
-	targetPath = args['output']+ str(numOfClusters) + "_GMM.cov"
+	targetPath = targetFile+ str(numOfClusters) + "_GMM.cov"
 	covFile = open(targetPath,"w")
 	print("target File: ", targetPath)
 
 	for covMat in covMatVect:
-		for cov in covMat:
-			covFile.write(str(cov[0])+" ")
+		# for cov in covMat:
+		for index in range(len(covMat)):
+			covFile.write(str(covMat[index][index])+" ")
 		covFile.write("\n")
 
 	covFile.close()

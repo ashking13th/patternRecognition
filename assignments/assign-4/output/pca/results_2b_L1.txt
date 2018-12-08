@@ -1,2 +1,2 @@
-No of clusters        bayou               chalet              creek
-2                   [25. 16.  9.]      [12. 23. 15.]        [20. 16. 14.]
+#### L ####     #### C ####
+    
